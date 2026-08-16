@@ -370,13 +370,19 @@ function renderDynamicForm(container, form, fields, index) {
     const title = escapeDynamicValue(form.title || 'Formular');
     const description = escapeDynamicValue(form.description || '');
     const submitLabel = escapeDynamicValue(form.submitLabel || 'Formular absenden');
+    const standaloneFormPage = String(container.getAttribute('data-wkc-form-standalone') || '') === '1';
+    const headerHtml = standaloneFormPage
+        ? ''
+        : `<header class="mb-8">
+                <h3 class="text-2xl md:text-3xl font-extrabold text-gray-900">${title}</h3>
+                ${description ? `<p class="mt-3 text-sm md:text-base text-gray-600 leading-relaxed">${description}</p>` : ''}
+            </header>`;
 
-    const fieldHtml = fields.map((field) => renderDynamicFormField(field, index)).join('');
+    const fieldHtml = fields.map((field, fieldIndex) => renderDynamicFormField(field, index, fieldIndex)).join('');
     container.innerHTML = `
         <section class="wkc-form-shell rounded-3xl border border-gray-200 bg-white p-6 md:p-10 shadow-sm">
-            <h3 class="text-2xl md:text-3xl font-extrabold text-gray-900">${title}</h3>
-            ${description ? `<p class="mt-3 text-sm md:text-base text-gray-600 leading-relaxed">${description}</p>` : ''}
-            <form class="mt-8 wkc-dynamic-form" data-form-slug="${escapeDynamicValue(form.slug || '')}" enctype="multipart/form-data">
+            ${headerHtml}
+            <form class="${standaloneFormPage ? 'mt-0' : 'mt-8'} wkc-dynamic-form" data-form-slug="${escapeDynamicValue(form.slug || '')}" enctype="multipart/form-data">
                 <input type="text" name="website" value="" autocomplete="off" tabindex="-1" aria-hidden="true" class="hidden">
                 <div class="dynamic-form-message hidden rounded-xl p-4 text-sm font-medium"></div>
                 <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5 wkc-dynamic-form-fields">
@@ -398,10 +404,10 @@ function renderDynamicForm(container, form, fields, index) {
     bindDynamicFormSubmission(formElement, form);
 }
 
-function renderDynamicFormField(field, index) {
+function renderDynamicFormField(field, index, fieldIndex) {
     const type = String(field.type || 'text');
     const label = escapeDynamicValue(field.label || '');
-    const name = escapeDynamicValue(field.name || `field_${index}`);
+    const name = escapeDynamicValue(field.name || `field_${fieldIndex}`);
     const helpText = escapeDynamicValue(field.helpText || '');
     const placeholder = escapeDynamicValue(field.placeholder || '');
     const required = !!field.required;
@@ -420,10 +426,11 @@ function renderDynamicFormField(field, index) {
     }
 
     if (type === 'textarea') {
+        const rows = Math.max(2, Math.min(20, Number(field.options?.textareaRows || 4)));
         return `
             <div class="${fieldSpanClass}">
-                <label class="mb-1 block text-sm font-bold text-gray-700" for="dyn-${name}-${index}">${label}${requiredMark}</label>
-                <textarea id="dyn-${name}-${index}" name="${name}" rows="4" class="${baseInputClass}" placeholder="${placeholder}" ${requiredAttr}></textarea>
+                <label class="mb-1 block text-sm font-bold text-gray-700" for="dyn-${name}-${index}-${fieldIndex}">${label}${requiredMark}</label>
+                <textarea id="dyn-${name}-${index}-${fieldIndex}" name="${name}" rows="${rows}" class="${baseInputClass}" placeholder="${placeholder}" ${requiredAttr}></textarea>
                 ${helpText ? `<p class="mt-1 text-xs text-gray-500">${helpText}</p>` : ''}
             </div>
         `;
@@ -443,8 +450,8 @@ function renderDynamicFormField(field, index) {
 
         return `
             <div class="${fieldSpanClass}">
-                <label class="mb-1 block text-sm font-bold text-gray-700" for="dyn-${name}-${index}">${label}${requiredMark}</label>
-                <select id="dyn-${name}-${index}" name="${name}" class="${baseInputClass}" ${requiredAttr}>
+                <label class="mb-1 block text-sm font-bold text-gray-700" for="dyn-${name}-${index}-${fieldIndex}">${label}${requiredMark}</label>
+                <select id="dyn-${name}-${index}-${fieldIndex}" name="${name}" class="${baseInputClass}" ${requiredAttr}>
                     <option value="">Bitte wählen</option>
                     ${options}
                 </select>
@@ -472,23 +479,53 @@ function renderDynamicFormField(field, index) {
         const maxSizeMb = Number(field.options?.maxSizeMb || 10);
         return `
             <div class="${fieldSpanClass}">
-                <label class="mb-1 block text-sm font-bold text-gray-700" for="dyn-${name}-${index}">${label}${requiredMark}</label>
-                <input id="dyn-${name}-${index}" name="${name}" type="file" class="${baseInputClass}" accept="${accept}" ${requiredAttr}>
+                <label class="mb-1 block text-sm font-bold text-gray-700" for="dyn-${name}-${index}-${fieldIndex}">${label}${requiredMark}</label>
+                <input id="dyn-${name}-${index}-${fieldIndex}" name="${name}" type="file" class="${baseInputClass}" accept="${accept}" ${requiredAttr}>
                 <p class="mt-1 text-xs text-gray-500">${helpText || `Maximal ${maxSizeMb} MB.`}</p>
             </div>
         `;
     }
 
     if (type === 'signature') {
+        const signatureId = escapeDynamicValue(`${name}-${index}-${fieldIndex}`);
         return `
-            <div class="wkc-signature-field ${fieldSpanClass}" data-signature-field="${name}">
+            <div class="wkc-signature-field ${fieldSpanClass}" data-signature-field="${signatureId}">
                 <label class="mb-1 block text-sm font-bold text-gray-700">${label}${requiredMark}</label>
-                <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
+
+                <div class="hidden md:block overflow-hidden rounded-xl border border-gray-200 bg-white">
                     <canvas class="wkc-signature-canvas block w-full" height="180"></canvas>
                 </div>
-                <div class="mt-2 flex items-center justify-between gap-3">
+                <div class="md:hidden rounded-xl border border-gray-200 bg-white p-3">
+                    <div class="wkc-signature-mobile-preview h-24 rounded-lg border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden">
+                        <img class="wkc-signature-preview-image hidden h-full w-full object-contain" alt="Unterschrift-Vorschau">
+                        <span class="wkc-signature-preview-empty text-xs text-gray-500">Noch keine Unterschrift</span>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between gap-2">
+                        <button type="button" data-signature-open class="rounded-lg bg-primary px-3 py-2 text-xs font-bold text-white hover:bg-primary-dark transition-colors">Unterschrift öffnen</button>
+                        <button type="button" data-signature-clear="${signatureId}" class="rounded-lg border border-gray-200 px-3 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50">Löschen</button>
+                    </div>
+                </div>
+
+                <div class="mt-2 hidden md:flex items-center justify-between gap-3">
                     <p class="text-xs text-gray-500">${helpText || 'Bitte unterschreiben Sie im Feld.'}</p>
-                    <button type="button" data-signature-clear="${name}" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-bold text-gray-600 hover:bg-gray-50">Signatur löschen</button>
+                    <button type="button" data-signature-clear="${signatureId}" class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-bold text-gray-600 hover:bg-gray-50">Signatur löschen</button>
+                </div>
+
+                <div class="wkc-signature-modal fixed inset-0 z-[1200] hidden bg-black/65 backdrop-blur-sm p-3" data-signature-modal>
+                    <div class="mx-auto mt-6 w-full max-w-xl rounded-2xl bg-white shadow-2xl">
+                        <div class="flex items-center justify-between border-b border-gray-200 px-4 py-3">
+                            <h4 class="text-base font-bold text-gray-900">${label || 'Unterschrift'}</h4>
+                            <button type="button" data-signature-close class="rounded-lg border border-gray-200 px-2.5 py-1.5 text-sm font-bold text-gray-600 hover:bg-gray-50">Schließen</button>
+                        </div>
+                        <div class="p-4">
+                            <canvas class="wkc-signature-canvas-mobile block w-full rounded-xl border border-gray-200 bg-white" height="280"></canvas>
+                            <p class="mt-2 text-xs text-gray-500">${helpText || 'Bitte unterschreiben Sie im Feld.'}</p>
+                            <div class="mt-4 flex items-center justify-between gap-2">
+                                <button type="button" data-signature-clear="${signatureId}" class="rounded-lg border border-gray-200 px-3 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50">Löschen</button>
+                                <button type="button" data-signature-save class="rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white hover:bg-primary-dark transition-colors">Unterschrift übernehmen</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <input type="hidden" name="${name}" value="" ${requiredAttr}>
             </div>
@@ -498,8 +535,8 @@ function renderDynamicFormField(field, index) {
     const inputType = ['email', 'tel'].includes(type) ? type : 'text';
     return `
         <div class="${fieldSpanClass}">
-            <label class="mb-1 block text-sm font-bold text-gray-700" for="dyn-${name}-${index}">${label}${requiredMark}</label>
-            <input id="dyn-${name}-${index}" name="${name}" type="${inputType}" class="${baseInputClass}" placeholder="${placeholder}" ${requiredAttr}>
+            <label class="mb-1 block text-sm font-bold text-gray-700" for="dyn-${name}-${index}-${fieldIndex}">${label}${requiredMark}</label>
+            <input id="dyn-${name}-${index}-${fieldIndex}" name="${name}" type="${inputType}" class="${baseInputClass}" placeholder="${placeholder}" ${requiredAttr}>
             ${helpText ? `<p class="mt-1 text-xs text-gray-500">${helpText}</p>` : ''}
         </div>
     `;
@@ -509,85 +546,174 @@ function setupDynamicSignaturePads(formElement) {
     const signatureFields = Array.from(formElement.querySelectorAll('.wkc-signature-field'));
     signatureFields.forEach((field) => {
         const canvas = field.querySelector('.wkc-signature-canvas');
+        const mobileCanvas = field.querySelector('.wkc-signature-canvas-mobile');
+        const modal = field.querySelector('[data-signature-modal]');
+        const openBtn = field.querySelector('[data-signature-open]');
+        const closeBtn = field.querySelector('[data-signature-close]');
+        const saveBtn = field.querySelector('[data-signature-save]');
+        const previewImage = field.querySelector('.wkc-signature-preview-image');
+        const previewEmpty = field.querySelector('.wkc-signature-preview-empty');
         const hidden = field.querySelector('input[type="hidden"]');
-        const clearBtn = field.querySelector('[data-signature-clear]');
-        if (!canvas || !hidden) return;
+        const clearBtns = Array.from(field.querySelectorAll('[data-signature-clear]'));
+        if (!hidden || (!canvas && !mobileCanvas)) return;
 
-        const context = canvas.getContext('2d');
-        if (!context) return;
-        context.strokeStyle = '#1f2937';
-        context.lineWidth = 2;
-        context.lineCap = 'round';
-        context.lineJoin = 'round';
+        const desktopContext = canvas ? canvas.getContext('2d') : null;
+        const mobileContext = mobileCanvas ? mobileCanvas.getContext('2d') : null;
+        const setBrush = (ctx) => {
+            if (!ctx) return;
+            ctx.strokeStyle = '#1f2937';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+        };
+        setBrush(desktopContext);
+        setBrush(mobileContext);
 
-        const resizeCanvas = () => {
-            const rect = canvas.getBoundingClientRect();
+        const drawDataOnCanvas = (targetCanvas, targetContext, dataUrl) => {
+            if (!targetCanvas || !targetContext) return;
+            const rect = targetCanvas.getBoundingClientRect();
+            if (!rect.width) return;
+            targetContext.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
+            if (!dataUrl || dataUrl === 'data:,') return;
+            const image = new Image();
+            image.onload = () => {
+                targetContext.drawImage(image, 0, 0, rect.width, rect.height);
+            };
+            image.src = dataUrl;
+        };
+
+        const resizeCanvas = (targetCanvas, targetContext, targetHeight) => {
+            if (!targetCanvas || !targetContext) return;
+            const rect = targetCanvas.getBoundingClientRect();
+            if (!rect.width) return;
             const ratio = Math.max(window.devicePixelRatio || 1, 1);
-            const snapshot = canvas.toDataURL('image/png');
-            canvas.width = Math.max(320, Math.floor(rect.width * ratio));
-            canvas.height = Math.floor(180 * ratio);
-            context.setTransform(ratio, 0, 0, ratio, 0, 0);
+            const snapshot = targetCanvas.toDataURL('image/png');
+            targetCanvas.width = Math.max(320, Math.floor(rect.width * ratio));
+            targetCanvas.height = Math.floor(targetHeight * ratio);
+            targetContext.setTransform(ratio, 0, 0, ratio, 0, 0);
+            drawDataOnCanvas(targetCanvas, targetContext, snapshot);
+        };
 
-            if (snapshot && snapshot !== 'data:,') {
-                const image = new Image();
-                image.onload = () => {
-                    context.drawImage(image, 0, 0, rect.width, 180);
-                };
-                image.src = snapshot;
+        const syncPreview = (dataUrl) => {
+            if (!previewImage || !previewEmpty) return;
+            if (dataUrl && dataUrl !== 'data:,') {
+                previewImage.src = dataUrl;
+                previewImage.classList.remove('hidden');
+                previewEmpty.classList.add('hidden');
+            } else {
+                previewImage.removeAttribute('src');
+                previewImage.classList.add('hidden');
+                previewEmpty.classList.remove('hidden');
             }
         };
 
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+        const applySignature = (dataUrl) => {
+            hidden.value = dataUrl && dataUrl !== 'data:,' ? dataUrl : '';
+            drawDataOnCanvas(canvas, desktopContext, hidden.value);
+            drawDataOnCanvas(mobileCanvas, mobileContext, hidden.value);
+            syncPreview(hidden.value);
+        };
 
-        let drawing = false;
-        let hasSignature = false;
+        const clearSignature = () => {
+            applySignature('');
+        };
 
-        const pointerPosition = (event) => {
-            const rect = canvas.getBoundingClientRect();
+        resizeCanvas(canvas, desktopContext, 180);
+        resizeCanvas(mobileCanvas, mobileContext, 280);
+        if (hidden.value) {
+            applySignature(hidden.value);
+        } else {
+            syncPreview('');
+        }
+
+        const pointerPosition = (targetCanvas, event) => {
+            const rect = targetCanvas.getBoundingClientRect();
             return {
                 x: event.clientX - rect.left,
                 y: event.clientY - rect.top,
             };
         };
 
-        const startDraw = (event) => {
-            drawing = true;
-            const { x, y } = pointerPosition(event);
-            context.beginPath();
-            context.moveTo(x, y);
-            event.preventDefault();
+        const bindCanvasDrawing = (targetCanvas, targetContext, commitOnEnd) => {
+            if (!targetCanvas || !targetContext) return;
+            targetCanvas.style.touchAction = 'none';
+
+            let drawing = false;
+            const startDraw = (event) => {
+                drawing = true;
+                const { x, y } = pointerPosition(targetCanvas, event);
+                targetContext.beginPath();
+                targetContext.moveTo(x, y);
+                event.preventDefault();
+            };
+            const draw = (event) => {
+                if (!drawing) return;
+                const { x, y } = pointerPosition(targetCanvas, event);
+                targetContext.lineTo(x, y);
+                targetContext.stroke();
+                event.preventDefault();
+            };
+            const endDraw = () => {
+                if (!drawing) return;
+                drawing = false;
+                targetContext.closePath();
+                if (commitOnEnd) {
+                    applySignature(targetCanvas.toDataURL('image/png'));
+                }
+            };
+
+            targetCanvas.addEventListener('pointerdown', startDraw);
+            targetCanvas.addEventListener('pointermove', draw);
+            targetCanvas.addEventListener('pointerup', endDraw);
+            targetCanvas.addEventListener('pointerleave', endDraw);
+            targetCanvas.addEventListener('pointercancel', endDraw);
         };
-        const draw = (event) => {
-            if (!drawing) return;
-            const { x, y } = pointerPosition(event);
-            context.lineTo(x, y);
-            context.stroke();
-            hasSignature = true;
-            hidden.value = canvas.toDataURL('image/png');
-            event.preventDefault();
-        };
-        const endDraw = () => {
-            drawing = false;
-            context.closePath();
-            if (hasSignature) {
-                hidden.value = canvas.toDataURL('image/png');
+
+        bindCanvasDrawing(canvas, desktopContext, true);
+        bindCanvasDrawing(mobileCanvas, mobileContext, false);
+
+        const openModal = () => {
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            resizeCanvas(mobileCanvas, mobileContext, 280);
+            if (hidden.value) {
+                drawDataOnCanvas(mobileCanvas, mobileContext, hidden.value);
             }
         };
+        const closeModal = () => {
+            if (!modal) return;
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        };
 
-        canvas.addEventListener('pointerdown', startDraw);
-        canvas.addEventListener('pointermove', draw);
-        canvas.addEventListener('pointerup', endDraw);
-        canvas.addEventListener('pointerleave', endDraw);
-        canvas.addEventListener('pointercancel', endDraw);
-
-        if (clearBtn) {
-            clearBtn.addEventListener('click', () => {
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                hidden.value = '';
-                hasSignature = false;
+        if (openBtn) openBtn.addEventListener('click', openModal);
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        if (saveBtn && mobileCanvas) {
+            saveBtn.addEventListener('click', () => {
+                applySignature(mobileCanvas.toDataURL('image/png'));
+                closeModal();
             });
         }
+        if (modal) {
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+
+        clearBtns.forEach((btn) => {
+            btn.addEventListener('click', clearSignature);
+        });
+
+        window.addEventListener('resize', () => {
+            resizeCanvas(canvas, desktopContext, 180);
+            resizeCanvas(mobileCanvas, mobileContext, 280);
+            if (hidden.value) {
+                applySignature(hidden.value);
+            }
+        });
     });
 }
 
@@ -631,12 +757,26 @@ function bindDynamicFormSubmission(formElement, formConfig) {
 
             formElement.querySelectorAll('.wkc-signature-field').forEach((field) => {
                 const canvas = field.querySelector('.wkc-signature-canvas');
+                const mobileCanvas = field.querySelector('.wkc-signature-canvas-mobile');
                 const hidden = field.querySelector('input[type="hidden"]');
+                const previewImage = field.querySelector('.wkc-signature-preview-image');
+                const previewEmpty = field.querySelector('.wkc-signature-preview-empty');
                 const context = canvas ? canvas.getContext('2d') : null;
+                const mobileContext = mobileCanvas ? mobileCanvas.getContext('2d') : null;
                 if (context && canvas) {
                     context.clearRect(0, 0, canvas.width, canvas.height);
                 }
+                if (mobileContext && mobileCanvas) {
+                    mobileContext.clearRect(0, 0, mobileCanvas.width, mobileCanvas.height);
+                }
                 if (hidden) hidden.value = '';
+                if (previewImage) {
+                    previewImage.removeAttribute('src');
+                    previewImage.classList.add('hidden');
+                }
+                if (previewEmpty) {
+                    previewEmpty.classList.remove('hidden');
+                }
             });
         } catch (error) {
             messageBox.className = 'dynamic-form-message rounded-xl p-4 text-sm font-medium bg-red-50 text-red-700 border border-red-200';
