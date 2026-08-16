@@ -117,7 +117,15 @@ function decodeFieldOptions(string $type, array $field): array {
         $options['maxSizeMb'] = $maxSizeMb;
     }
     if ($type === 'textarea') {
-        $options['textareaRows'] = max(2, min(20, (int) ($field['textareaRows'] ?? 4)));
+        $rows = max(2, min(20, (int) ($field['fieldRows'] ?? $field['textareaRows'] ?? 4)));
+        $options['textareaRows'] = $rows;
+        $options['fieldRows'] = $rows;
+    }
+    if (in_array($type, ['text', 'email', 'tel'], true)) {
+        $options['fieldRows'] = max(1, min(20, (int) ($field['fieldRows'] ?? 1)));
+    }
+    if ($type === 'signature') {
+        $options['fieldRows'] = max(10, min(30, (int) ($field['fieldRows'] ?? 10)));
     }
     return $options;
 }
@@ -860,6 +868,7 @@ if ($method === 'GET' && $action === 'detail') {
             'accept' => (string) ($options['accept'] ?? ''),
             'maxSizeMb' => (int) ($options['maxSizeMb'] ?? 10),
             'textareaRows' => (int) ($options['textareaRows'] ?? 4),
+            'fieldRows' => (int) ($options['fieldRows'] ?? ((string) $field['field_type'] === 'signature' ? 10 : (((string) $field['field_type'] === 'textarea') ? 4 : 1))),
         ];
     }
 

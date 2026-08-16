@@ -455,6 +455,11 @@ function renderStaticRouteWithCms(PDO $db, string $filePath, string $routePath, 
     }, $content);
     $content = appendTargetPathForms($db, $routePath, $content);
     $pageScripts = extractStaticRouteScripts($html);
+    $normalizedRoute = strtolower(trim($routePath, '/'));
+    $isBoardPage = $normalizedRoute === 'vorstand';
+    $mainMaxWidth = $isBoardPage ? '1500px' : '1100px';
+    $mainPadding = $isBoardPage ? '2rem 1rem 5rem' : '3rem 1rem 5rem';
+    $articleClass = $isBoardPage ? 'max-w-none' : 'prose max-w-none';
     $titleBase = ucwords(str_replace(['-', '/'], ' ', trim($routePath)));
     $title = $titleBase !== '' ? $titleBase . ' - ' . (string) ($seo['defaultMetaTitle'] ?? SITE_NAME) : (string) ($seo['defaultMetaTitle'] ?? SITE_NAME);
     $description = (string) ($seo['defaultMetaDescription'] ?? '');
@@ -469,7 +474,7 @@ function renderStaticRouteWithCms(PDO $db, string $filePath, string $routePath, 
         . '<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">'
         . '<link rel="stylesheet" href="/src/css/style.css"></head><body>'
         . renderShellStart($branding, $mainMenu)
-        . '<main class="pt-24" style="max-width:1100px; margin:0 auto; padding:3rem 1rem 5rem;"><article class="prose max-w-none">'
+        . '<main class="pt-24" style="max-width:' . $mainMaxWidth . '; margin:0 auto; padding:' . $mainPadding . ';"><article class="' . $articleClass . '">'
         . $content
         . '</article></main>'
         . renderShellEnd($branding, $footerMenu)
