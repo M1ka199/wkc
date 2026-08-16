@@ -207,7 +207,7 @@ $formId = (int) ($_GET['id'] ?? 0);
                             </button>
                         </div>
                         <div id="fieldsList" class="space-y-3"></div>
-                        <p class="text-xs text-gray-500">Unterstützte Typen: Text, E-Mail, Telefon, Textbereich, Checkbox, Datei-Upload, Signatur-Pad, Überschrift, Trennelement. Pro Feld kann zudem volle oder halbe Breite gewählt werden.</p>
+                        <p class="text-xs text-gray-500">Unterstützte Typen: Text, E-Mail, Telefon, Datum, Textbereich, Dropdown, Checkbox, Datei-Upload, Signatur-Pad, Überschrift, Infotext, Trennelement. Pro Feld kann zudem volle, halbe oder Drittel-Breite gewählt werden.</p>
                     </div>
                 </section>
 
