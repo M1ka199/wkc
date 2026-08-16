@@ -221,7 +221,11 @@ $formId = (int) ($_GET['id'] ?? 0);
                         <div>
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Betreff *</label>
                             <input id="emailSubject" type="text" class="w-full rounded-lg border-gray-300" placeholder="Neue Einsendung: {form_title}">
-                            <p class="mt-1 text-xs text-gray-500">Platzhalter: {form_title}, {form_slug}, {date}, {time}</p>
+                            <p class="mt-1 text-xs text-gray-500">Platzhalter: {form_title}, {form_slug}, {date}, {time}, {field:feldname} (z. B. {field:email})</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Hinweis</label>
+                            <input type="text" class="w-full rounded-lg border-gray-300 bg-gray-50 text-gray-600" readonly value="Wenn der Absender eine E-Mail-Adresse eingibt, erhält er automatisch eine Kopie der Nachricht. Im Betreff können zusätzlich Formularfelder mit {field:feldname} eingebettet werden.">
                         </div>
                     </div>
 
