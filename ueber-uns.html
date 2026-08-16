@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Ãœber uns â€“ WKC</title>
+    <meta name="description" content="Erfahren Sie mehr Ã¼ber die WKC â€“ eine parteiunabhÃ¤ngige Vereinigung engagierter BÃ¼rgerinnen und BÃ¼rger der Gemeinde Wulften am Harz." />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#7c3aed",
+                        "primary-dark": "#5b21b6",
+                        "primary-light": "#a78bfa",
+                        "bg-light": "#f8faf9",
+                        "bg-section": "#f1f5f3",
+                    },
+                    fontFamily: {
+                        sans: ["Public Sans", "system-ui", "sans-serif"],
+                    },
+                },
+            },
+        };
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/css/style.css?v=2502191430" />
+</head>
+<body class="bg-bg-light text-gray-800 antialiased font-sans">
+
+    <main>
+
+        <!-- ===================== 1. HERO MIT FARBÃœBERLAGERUNG ===================== -->
+        <section class="relative w-full min-h-[70vh] flex items-center justify-center overflow-hidden">
+            <!-- Background with color overlay -->
+            <div class="absolute inset-0 z-0">
+                <div class="w-full h-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+                    <video autoplay muted loop playsinline class="w-full h-full object-cover opacity-40" poster="src/img/hero-poster.jpg">
+                        <source src="src/hero-background.mp4" type="video/mp4" />
+                    </video>
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-br from-primary/80 via-primary-dark/60 to-gray-900/80 mix-blend-multiply"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 via-transparent to-transparent"></div>
+            </div>
+
+            <div class="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto py-32">
+                <!-- Breadcrumb -->
+                <div class="flex items-center justify-center gap-2 text-sm text-white/60 mb-8 animate-fade-in-up">
+                    <a href="/" class="hover:text-white transition-colors">Startseite</a>
+                    <span class="material-symbols-outlined text-base">chevron_right</span>
+                    <span class="text-white font-medium">Ãœber uns</span>
+                </div>
+
+                <div class="animate-fade-in-up animation-delay-100">
+                    <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-md text-white text-sm font-semibold mb-6 border border-white/20">
+                        <span class="material-symbols-outlined text-base">groups</span>
+                        Wer wir sind
+                    </span>
+                </div>
+
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-white mb-6 leading-[1.1] tracking-tight animate-fade-in-up animation-delay-200">
+                    Gemeinsam fÃ¼r die <br class="hidden sm:block" /><span class="text-primary-light">Zukunft</span> von Wulften
+                </h1>
+
+                <p class="text-lg sm:text-xl text-white/80 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-300">
+                    ParteiunabhÃ¤ngig und bÃ¼rgernah â€“ seit 2021 setzen wir uns mit Herz und Verstand fÃ¼r ein lebenswertes Wulften am Harz ein.
+                </p>
+
+                <div class="mt-10 animate-fade-in-up animation-delay-400">
+                    <a href="#ueber-uns" class="inline-flex items-center gap-2 text-white/70 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined text-3xl animate-bounce">keyboard_arrow_down</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 2. ÃœBER UNS â€“ POLITISCHES STATEMENT ===================== -->
+        <section id="ueber-uns" class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 scroll-animate">
+                    <span class="text-primary font-bold text-sm tracking-[0.2em] uppercase">Unsere Ãœberzeugung</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-3">Was uns antreibt</h2>
+                    <div class="w-16 h-1 bg-primary rounded-full mx-auto mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <!-- Left: Statement -->
+                    <div class="scroll-animate">
+                        <div class="relative">
+                            <div class="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-primary to-primary/20 rounded-full hidden lg:block"></div>
+                            <div class="lg:pl-8">
+                                <p class="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-6">
+                                    â€žWir glauben daran, dass gute Kommunalpolitik dort beginnt, wo sich Menschen unabhÃ¤ngig von Parteiinteressen fÃ¼r ihre Heimat einsetzen."
+                                </p>
+                                <p class="text-gray-600 leading-relaxed mb-6">
+                                    Die WKC wurde 2021 von engagierten BÃ¼rgerinnen und BÃ¼rgern gegrÃ¼ndet, die eine Alternative zur klassischen Parteipolitik schaffen wollten. Als parteiunabhÃ¤ngige Vereinigung steht fÃ¼r uns nicht Ideologie, sondern das Wohl unserer Gemeinde im Mittelpunkt.
+                                </p>
+                                <p class="text-gray-600 leading-relaxed mb-6">
+                                    Unser ganzheitlicher Ansatz verbindet Natur- und Klimaschutz mit Ã¶konomischer Vernunft, setzt sich fÃ¼r den Erhalt der politischen EigenstÃ¤ndigkeit unserer Mitgliedsgemeinden ein und treibt den nachhaltigen Ausbau der Infrastruktur voran. Wir wollen Wulften und die Samtgemeinde Hattorf zu einem Ort machen, an dem junge Familien gerne leben und Ã¤ltere Generationen gut versorgt sind.
+                                </p>
+                                <p class="text-gray-600 leading-relaxed">
+                                    Wir hÃ¶ren zu, diskutieren offen und handeln entschlossen â€“ pragmatisch, transparent und immer im besten Interesse unserer MitbÃ¼rgerinnen und MitbÃ¼rger.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Werte-Karten -->
+                    <div class="scroll-animate animation-delay-200">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div class="bg-bg-light rounded-2xl p-6 border border-gray-100 hover:shadow-lg hover:border-primary/20 transition-all duration-300 group">
+                                <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-2xl">balance</span>
+                                </div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">ParteiunabhÃ¤ngig</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">Frei von ParteizwÃ¤ngen treffen wir Entscheidungen allein im Interesse unserer Gemeinde.</p>
+                            </div>
+                            <div class="bg-bg-light rounded-2xl p-6 border border-gray-100 hover:shadow-lg hover:border-primary/20 transition-all duration-300 group">
+                                <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-2xl">visibility</span>
+                                </div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Transparent</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">Offene Kommunikation und nachvollziehbare Entscheidungen sind unser Versprechen.</p>
+                            </div>
+                            <div class="bg-bg-light rounded-2xl p-6 border border-gray-100 hover:shadow-lg hover:border-primary/20 transition-all duration-300 group">
+                                <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-2xl">favorite</span>
+                                </div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">BÃ¼rgernah</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">Wir sind Teil der Gemeinschaft und haben immer ein offenes Ohr fÃ¼r Ihre Anliegen.</p>
+                            </div>
+                            <div class="bg-bg-light rounded-2xl p-6 border border-gray-100 hover:shadow-lg hover:border-primary/20 transition-all duration-300 group">
+                                <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-4 group-hover:bg-primary group-hover:text-white transition-all">
+                                    <span class="material-symbols-outlined text-2xl">rocket_launch</span>
+                                </div>
+                                <h3 class="text-base font-bold text-gray-900 mb-2">Zukunftsorientiert</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">Nachhaltige LÃ¶sungen fÃ¼r die Herausforderungen von morgen â€“ heute gestaltet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== UNSER LOGO ===================== -->
+        <section class="py-24 bg-white border-t border-gray-100">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12 scroll-animate">
+                    <span class="text-primary font-bold text-sm tracking-[0.2em] uppercase">MarkenidentitÃ¤t</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-3">Unser Logo</h2>
+                    <div class="w-16 h-1 bg-primary rounded-full mx-auto mt-4"></div>
+                    <p class="mt-4 text-gray-500 max-w-2xl mx-auto">Ein Bild, das mehr erzÃ¤hlt als drei Buchstaben: Wer wir sind, wo wir herkommen und wofÃ¼r wir stehen.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                    <div class="bg-bg-section rounded-3xl p-10 md:p-14 flex items-center justify-center scroll-animate">
+                        <img src="src/wkc-logo.json" data-brand-logo="header" alt="WKC Logo" class="w-full max-w-xs h-auto" onerror="this.style.display='none'" />
+                    </div>
+                    <div class="space-y-5 scroll-animate">
+                        <div class="flex gap-4 items-start">
+                            <span class="w-10 h-10 rounded-xl bg-gray-800 text-white flex items-center justify-center font-black flex-shrink-0">Z</span>
+                            <div>
+                                <h3 class="font-bold text-gray-900 mb-1">Anthrazit â€“ das â€žZ" fÃ¼r Zukunft</h3>
+                                <p class="text-sm text-gray-600">StabilitÃ¤t und BodenstÃ¤ndigkeit. Unser Z steht fÃ¼r die Zukunft, die wir aktiv gestalten â€“ mit Verantwortung und AugenmaÃŸ.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-start">
+                            <span class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-black flex-shrink-0">W</span>
+                            <div>
+                                <h3 class="font-bold text-gray-900 mb-1">GrÃ¼n â€“ das â€žW" fÃ¼r Wulften</h3>
+                                <p class="text-sm text-gray-600">Naturverbunden, lebendig, lokal. Das grÃ¼ne W reprÃ¤sentiert unser Dorf â€“ seine Felder, WÃ¤lder und sein Engagement fÃ¼r eine lebenswerte Umwelt.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4 items-start">
+                            <span class="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-base">groups</span></span>
+                            <div>
+                                <h3 class="font-bold text-gray-900 mb-1">Orange â€“ verbindendes Element</h3>
+                                <p class="text-sm text-gray-600">WÃ¤rme, Gemeinschaft und Zusammenhalt â€“ die Farbe der Samtgemeinde, in deren Verbund Wulften eingebunden ist und mitgestaltet.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 3. ANIMIERTER ZEITSTRAHL ===================== -->
+        <section class="py-24 bg-bg-section overflow-hidden">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 scroll-animate">
+                    <span class="text-primary font-bold text-sm tracking-[0.2em] uppercase">Unsere Meilensteine</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-3">Unser Weg seit 2021</h2>
+                    <div class="w-16 h-1 bg-primary rounded-full mx-auto mt-4"></div>
+                    <p class="mt-4 text-gray-500 max-w-2xl mx-auto">
+                        Von der GrÃ¼ndung bis heute â€“ eine Erfolgsgeschichte aus Engagement und Zusammenhalt.
+                    </p>
+                </div>
+
+                <!-- Timeline -->
+                <div class="relative">
+                    <!-- Vertical line -->
+                    <div class="absolute left-6 md:left-1/2 top-0 bottom-0 w-0.5 bg-gray-200 md:-translate-x-px timeline-line"></div>
+
+                    <!-- Milestone 1: GrÃ¼ndung -->
+                    <div class="relative flex flex-col md:flex-row items-start mb-12 md:mb-16 scroll-animate">
+                        <div class="md:w-1/2 md:pr-12 md:text-right pl-16 md:pl-0">
+                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 inline-block md:ml-auto">
+                                <div class="flex items-center gap-3 mb-3 md:justify-end">
+                                    <span class="material-symbols-outlined text-primary text-2xl">rocket_launch</span>
+                                    <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">Juli 2021</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">GrÃ¼ndung der WÃ¤hlergruppe</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">
+                                    Engagierte BÃ¼rgerinnen und BÃ¼rger schlieÃŸen sich zusammen, um eine parteiunabhÃ¤ngige Alternative in der Kommunalpolitik zu schaffen. Die WKC wird gegrÃ¼ndet.
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Timeline dot -->
+                        <div class="absolute left-6 md:left-1/2 top-6 md:top-8 w-3 h-3 -translate-x-1/2 z-10">
+                            <div class="w-full h-full bg-primary rounded-full ring-4 ring-primary/20 timeline-dot"></div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 hidden md:block"></div>
+                    </div>
+
+                    <!-- Milestone 2: Kommunalwahl -->
+                    <div class="relative flex flex-col md:flex-row items-start mb-12 md:mb-16 scroll-animate animation-delay-100">
+                        <div class="md:w-1/2 md:pr-12 hidden md:block"></div>
+                        <!-- Timeline dot -->
+                        <div class="absolute left-6 md:left-1/2 top-6 md:top-8 w-3 h-3 -translate-x-1/2 z-10">
+                            <div class="w-full h-full bg-primary rounded-full ring-4 ring-primary/20 timeline-dot"></div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 pl-16">
+                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span class="material-symbols-outlined text-primary text-2xl">how_to_vote</span>
+                                    <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">September 2021</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">36,4 % bei der Kommunalwahl</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">
+                                    Nur zwei Monate nach der GrÃ¼ndung erzielen wir ein beeindruckendes Ergebnis bei der Kommunalwahl. Das Vertrauen der WÃ¤hlerinnen und WÃ¤hler bestÃ¤tigt unseren Kurs.
+                                </p>
+                                <div class="mt-4 flex items-center gap-2">
+                                    <div class="flex-1 bg-gray-100 rounded-full h-3 overflow-hidden">
+                                        <div class="h-full bg-gradient-to-r from-primary to-primary-light rounded-full timeline-progress" style="width: 0%" data-target="36.4"></div>
+                                    </div>
+                                    <span class="text-sm font-bold text-primary">36,4 %</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 3: Ziele erreicht -->
+                    <div class="relative flex flex-col md:flex-row items-start mb-12 md:mb-16 scroll-animate animation-delay-200">
+                        <div class="md:w-1/2 md:pr-12 md:text-right pl-16 md:pl-0">
+                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 inline-block md:ml-auto">
+                                <div class="flex items-center gap-3 mb-3 md:justify-end">
+                                    <span class="material-symbols-outlined text-primary text-2xl">emoji_events</span>
+                                    <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">2022 â€“ 2024</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">Ziele umgesetzt & Projekte vorangetrieben</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">
+                                    In den folgenden Jahren setzen wir zahlreiche Ziele in die Tat um: von der StÃ¤rkung der Infrastruktur Ã¼ber Umweltprojekte bis hin zu konkreten Verbesserungen im Gemeindeleben.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="absolute left-6 md:left-1/2 top-6 md:top-8 w-3 h-3 -translate-x-1/2 z-10">
+                            <div class="w-full h-full bg-primary rounded-full ring-4 ring-primary/20 timeline-dot"></div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 hidden md:block"></div>
+                    </div>
+
+                    <!-- Milestone 4: FÃ¶rderungen -->
+                    <div class="relative flex flex-col md:flex-row items-start mb-12 md:mb-16 scroll-animate animation-delay-300">
+                        <div class="md:w-1/2 md:pr-12 hidden md:block"></div>
+                        <div class="absolute left-6 md:left-1/2 top-6 md:top-8 w-3 h-3 -translate-x-1/2 z-10">
+                            <div class="w-full h-full bg-primary rounded-full ring-4 ring-primary/20 timeline-dot"></div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 pl-16">
+                            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span class="material-symbols-outlined text-primary text-2xl">volunteer_activism</span>
+                                    <span class="text-xs font-bold text-primary bg-primary/10 px-3 py-1 rounded-full">Fortlaufend</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-2">Aktive FÃ¶rderung der Gemeinschaft</h3>
+                                <p class="text-sm text-gray-500 leading-relaxed">
+                                    Wir unterstÃ¼tzen aktiv Vereine, Initiativen und Projekte in Wulften â€“ von der JugendfÃ¶rderung bis zu kulturellen Veranstaltungen. Gemeinsam stÃ¤rken wir das Miteinander.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Milestone 5: Heute -->
+                    <div class="relative flex flex-col md:flex-row items-start scroll-animate animation-delay-400">
+                        <div class="md:w-1/2 md:pr-12 md:text-right pl-16 md:pl-0">
+                            <div class="bg-gradient-to-br from-primary to-primary-dark rounded-2xl p-6 shadow-lg text-white inline-block md:ml-auto">
+                                <div class="flex items-center gap-3 mb-3 md:justify-end">
+                                    <span class="material-symbols-outlined text-white/90 text-2xl">trending_up</span>
+                                    <span class="text-xs font-bold text-white bg-white/20 px-3 py-1 rounded-full">Heute</span>
+                                </div>
+                                <h3 class="text-lg font-bold mb-2">Die Reise geht weiter</h3>
+                                <p class="text-sm text-white/80 leading-relaxed">
+                                    Wir arbeiten tÃ¤glich daran, Wulften noch lebenswerter zu machen. Mit neuen Ideen, frischem Engagement und dem Vertrauen unserer MitbÃ¼rgerinnen und MitbÃ¼rger blicken wir optimistisch in die Zukunft.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="absolute left-6 md:left-1/2 top-6 md:top-8 w-4 h-4 -translate-x-1/2 z-10">
+                            <div class="w-full h-full bg-primary rounded-full ring-4 ring-primary/30 timeline-dot animate-pulse"></div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-12 hidden md:block"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 4. VORSTAND ===================== -->
+        <section id="vorstand" class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 scroll-animate">
+                    <span class="text-primary font-bold text-sm tracking-[0.2em] uppercase">Menschen fÃ¼r Wulften</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-3">Unser Vorstand</h2>
+                    <div class="w-16 h-1 bg-primary rounded-full mx-auto mt-4"></div>
+                    <p class="mt-4 text-gray-500 max-w-2xl mx-auto">
+                        Ein engagiertes Team mit vielfÃ¤ltigen Kompetenzen, vereint durch den Willen, unsere Gemeinde voranzubringen.
+                    </p>
+                </div>
+
+                <div id="vorstandGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                    <!-- Dynamically loaded from API -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 5. MITMACHEN CTA ===================== -->
+        <section id="mitmachen" class="py-24 bg-gradient-to-br from-primary to-primary-dark relative overflow-hidden">
+            <!-- Decorative elements -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center scroll-animate">
+                    <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-sm text-white text-sm font-semibold mb-6 border border-white/20">
+                        <span class="material-symbols-outlined text-base">group_add</span>
+                        Werden Sie aktiv
+                    </span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
+                        Gestalten Sie die Zukunft mit!
+                    </h2>
+                    <p class="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed mb-10">
+                        Sie mÃ¶chten sich fÃ¼r ein lebenswertes Wulften einsetzen? Werden Sie Teil unserer WÃ¤hlergruppe und bringen Sie Ihre Ideen und Ihr Engagement in die Kommunalpolitik ein â€“ parteiunabhÃ¤ngig und basisdemokratisch.
+                    </p>
+
+                    <div class="flex flex-wrap justify-center gap-6 mb-12">
+                        <div class="flex items-center gap-3 text-white/90">
+                            <span class="material-symbols-outlined text-white bg-white/20 rounded-full p-1.5 text-sm">check</span>
+                            <span class="font-medium">ParteiunabhÃ¤ngig</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-white/90">
+                            <span class="material-symbols-outlined text-white bg-white/20 rounded-full p-1.5 text-sm">check</span>
+                            <span class="font-medium">Aktiv mitbestimmen</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-white/90">
+                            <span class="material-symbols-outlined text-white bg-white/20 rounded-full p-1.5 text-sm">check</span>
+                            <span class="font-medium">Ideen einbringen</span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="/vorstand" class="px-8 py-4 bg-white text-primary text-lg font-bold rounded-full hover:bg-gray-100 transition-all shadow-lg transform hover:-translate-y-0.5 inline-flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">group_add</span>
+                            Jetzt Mitglied werden
+                        </a>
+                        <a href="#kontakt" class="px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white text-lg font-semibold rounded-full hover:bg-white hover:text-primary transition-all transform hover:-translate-y-0.5 inline-flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined">mail</span>
+                            Kontakt aufnehmen
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== 6. KONTAKT ===================== -->
+        <section id="kontakt" class="py-24 bg-bg-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                    <!-- Left Column -->
+                    <div class="flex flex-col justify-center scroll-animate">
+                        <span class="text-primary font-bold text-sm tracking-[0.2em] uppercase mb-2">Haben Sie Fragen?</span>
+                        <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-6">Kontaktieren Sie uns</h2>
+                        <div class="w-16 h-1 bg-primary rounded-full mb-6"></div>
+                        <p class="text-gray-500 mb-8 leading-relaxed">
+                            Sie haben ein Anliegen, Feedback oder mÃ¶chten uns einfach kennenlernen?
+                            Wir haben immer ein offenes Ohr fÃ¼r die BÃ¼rgerinnen und BÃ¼rger von Wulften. Schreiben Sie uns!
+                        </p>
+                        <div class="space-y-5">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm text-primary">
+                                    <span class="material-symbols-outlined">email</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">E-Mail</p>
+                                    <p class="text-gray-900 font-semibold">info@zukunft-wulften.de</p>
+                                </div>
+                            </div>
+                            <!-- <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm text-primary">
+                                    <span class="material-symbols-outlined">location_on</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Ort</p>
+                                    <p class="text-gray-900 font-semibold">37199 Wulften am Harz</p>
+                                </div>
+                            </div> -->
+                        </div>
+                        <!-- <div class="mt-10 p-6 bg-primary/5 rounded-xl border border-primary/10">
+                            <p class="text-sm text-gray-600 italic leading-relaxed">
+                                â€žPolitik lebt vom Mitmachen. Wir freuen uns Ã¼ber jede Anregung und laden Sie herzlich ein, sich einzubringen."
+                            </p>
+                            <p class="text-sm font-bold text-gray-900 mt-3">â€“ Thorsten Ehrhardt, 1. Vorsitzender</p>
+                        </div> -->
+                    </div>
+
+                    <!-- Right Column: Contact Form -->
+                    <div class="bg-white p-8 md:p-10 rounded-2xl shadow-lg border border-gray-100 scroll-animate animation-delay-100">
+                        <form id="contact-form" action="api/contact.php" method="POST" class="space-y-5">
+                            <div id="form-message" class="hidden rounded-xl p-4 text-sm font-medium"></div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label for="contact-name" class="block text-sm font-bold text-gray-700 mb-1.5">Name <span class="text-gray-400 font-normal" id="name-optional">(optional bei anonym)</span></label>
+                                    <input type="text" id="contact-name" name="name" placeholder="Max Mustermann"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" />
+                                </div>
+                                <div>
+                                    <label for="contact-email" class="block text-sm font-bold text-gray-700 mb-1.5">E-Mail <span class="text-gray-400 font-normal" id="email-optional">(optional bei anonym)</span></label>
+                                    <input type="email" id="contact-email" name="email" placeholder="max@beispiel.de"
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" />
+                                </div>
+                            </div>
+                            <div>
+                                <label for="contact-subject" class="block text-sm font-bold text-gray-700 mb-1.5">Betreff</label>
+                                <input type="text" id="contact-subject" name="subject" placeholder="Ihr Anliegen" required
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm" />
+                            </div>
+                            <div>
+                                <label for="contact-message" class="block text-sm font-bold text-gray-700 mb-1.5">Nachricht</label>
+                                <textarea id="contact-message" name="message" rows="4" placeholder="Wie kÃ¶nnen wir helfen?" required
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm resize-none"></textarea>
+                            </div>
+                            <div class="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
+                                <input type="checkbox" id="anonymous" name="anonymous" class="h-5 w-5 text-primary rounded border-gray-300 focus:ring-primary cursor-pointer" />
+                                <label for="anonymous" class="text-sm text-gray-600 cursor-pointer select-none">
+                                    <span class="font-semibold text-gray-700">Anonym senden</span> â€“ Name und E-Mail werden nicht Ã¼bermittelt.
+                                </label>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <input type="checkbox" id="privacy" name="privacy" required class="h-4 w-4 mt-0.5 text-primary rounded border-gray-300 focus:ring-primary" />
+                                <label for="privacy" class="text-xs text-gray-500">
+                                    Ich stimme zu, dass meine Angaben zur Kontaktaufnahme verarbeitet werden.
+                                    <a href="datenschutz.html" class="text-primary hover:underline">Datenschutzhinweise</a>
+                                </label>
+                            </div>
+                            <button type="submit" class="w-full bg-primary text-white font-bold py-4 rounded-xl hover:bg-primary-dark transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-lg">send</span>
+                                Nachricht absenden
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="bg-gray-900 text-white pt-16 pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-6">
+                        <img src="src/wkc-logo.json" data-brand-logo="footer" alt="WKC Logo" class="h-10" onerror="this.style.display='none'" />
+                    </div>
+                    <p class="text-gray-400 max-w-sm leading-relaxed text-sm">
+                        Die WKC ist eine parteiunabhÃ¤ngige Vereinigung engagierter BÃ¼rgerinnen und BÃ¼rger,
+                        die sich fÃ¼r die positive Entwicklung unserer Heimat einsetzt.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Navigation</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="/" class="text-gray-400 hover:text-primary transition-colors">Startseite</a></li>
+                        <li><a href="neuigkeiten.html" class="text-gray-400 hover:text-primary transition-colors">Neuigkeiten</a></li>
+                        <li><a href="#vorstand" class="text-gray-400 hover:text-primary transition-colors">Vorstand</a></li>
+                        <li><a href="themen.html" class="text-gray-400 hover:text-primary transition-colors">Themen & Ziele</a></li>
+                        <li><a href="#kontakt" class="text-gray-400 hover:text-primary transition-colors">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Rechtliches</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="impressum.html" class="text-gray-400 hover:text-primary transition-colors">Impressum</a></li>
+                        <li><a href="datenschutz.html" class="text-gray-400 hover:text-primary transition-colors">Datenschutz</a></li>
+                    </ul>
+                    <div class="mt-6">
+                        <h4 class="font-bold mb-3 text-sm uppercase tracking-widest text-gray-400">Kontakt</h4>
+                        <div class="flex items-center gap-2 text-sm text-gray-400">
+                            <span class="material-symbols-outlined text-primary text-base">mail</span>
+                            info@zukunft-wulften.de
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2021 â€“ 2026 WKC. Alle Rechte vorbehalten.</p>
+                <div class="flex items-center gap-4 mt-3 md:mt-0">
+                    <span>Gemeinsam fÃ¼r unsere Heimat.</span>
+                    <a href="admin/" class="hover:text-primary transition-colors">Login</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to top -->
+    <a id="back-to-top" href="#" class="fixed bottom-6 right-6 bg-white p-3 rounded-full shadow-lg border border-gray-200 text-gray-500 hover:text-primary transition-all z-40 opacity-0 pointer-events-none translate-y-4 hidden lg:flex items-center justify-center">
+        <span class="material-symbols-outlined">arrow_upward</span>
+    </a>
+
+    <script src="src/js/site-config.js"></script>
+    <script src="src/js/main.js?v=2502191430"></script>
+    <script>
+        // Timeline progress bar animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressBars = document.querySelectorAll('.timeline-progress');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const target = entry.target.dataset.target;
+                        entry.target.style.transition = 'width 1.5s cubic-bezier(0.22, 1, 0.36, 1)';
+                        entry.target.style.width = target + '%';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            progressBars.forEach(bar => observer.observe(bar));
+        });
+    </script>
+</body>
+</html>
+
+
+
+

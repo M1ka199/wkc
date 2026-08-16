@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mitglieder-Login - WKC</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { primary: '#7c3aed', 'primary-dark': '#5b21b6', 'bg-light': '#f8faf9' } } }
+        };
+    </script>
+    <style>
+        body { font-family: "Public Sans", sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="min-h-screen bg-bg-light text-gray-900">
+    <div class="max-w-5xl mx-auto px-4 py-10 md:py-16">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+            <section class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 md:p-8">
+                <img src="src/wkc-logo.svg" alt="WKC Logo" class="h-14 mb-6" onerror="this.style.display='none'" />
+                <h1 class="text-2xl md:text-3xl font-black mb-2">Mitglieder-Login</h1>
+                <p class="text-gray-600 mb-6">Anmeldung fÃ¼r Mitglieder, Redakteure und Administratoren.</p>
+
+                <div id="loginError" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700"></div>
+
+                <form id="memberLoginForm" class="space-y-4">
+                    <div>
+                        <label for="username" class="block text-sm font-bold text-gray-700 mb-1">Benutzername</label>
+                        <input id="username" name="username" type="text" required class="w-full rounded-lg border-gray-300" placeholder="Benutzername" />
+                    </div>
+                    <div>
+                        <label for="password" class="block text-sm font-bold text-gray-700 mb-1">Passwort</label>
+                        <div class="relative">
+                            <input id="password" name="password" type="password" required class="w-full rounded-lg border-gray-300 pr-11" placeholder="Passwort" />
+                            <button type="button" id="togglePw" class="absolute inset-y-0 right-2 my-auto text-gray-400 hover:text-gray-700">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="loginBtn" type="submit" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2.5 rounded-lg inline-flex justify-center items-center gap-2">
+                        <span class="material-symbols-outlined">login</span>
+                        Anmelden
+                    </button>
+                </form>
+
+                <div class="mt-5 text-sm text-gray-500 flex gap-4">
+                    <a href="admin/passwort-vergessen.php" class="hover:text-primary">Passwort vergessen?</a>
+                    <a href="/" class="hover:text-primary">Zur Startseite</a>
+                </div>
+            </section>
+
+            <section class="bg-gradient-to-br from-primary/10 via-white to-primary/5 rounded-2xl border border-gray-200 p-6 md:p-8">
+                <h2 class="text-xl font-black mb-3">Dein Zugang zum Mitgliederbereich</h2>
+                <ul class="space-y-2 text-gray-700 text-sm list-disc ml-5">
+                    <li>PersÃ¶nliche Daten und Passwort verwalten</li>
+                    <li>BeitrÃ¤ge, Seiten und Galerien pflegen (rollenabhÃ¤ngig)</li>
+                    <li>Sichere Anmeldung Ã¼ber das zentrale CMS-System</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        (function initMemberLogin() {
+            const form = document.getElementById('memberLoginForm');
+            const error = document.getElementById('loginError');
+            const btn = document.getElementById('loginBtn');
+            const toggle = document.getElementById('togglePw');
+            const pw = document.getElementById('password');
+
+            toggle.addEventListener('click', () => {
+                const show = pw.type === 'password';
+                pw.type = show ? 'text' : 'password';
+                toggle.querySelector('.material-symbols-outlined').textContent = show ? 'visibility_off' : 'visibility';
+            });
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                error.classList.add('hidden');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>Anmelden...';
+
+                const fd = new FormData(form);
+                fd.append('action', 'login');
+
+                try {
+                    const res = await fetch('api/auth.php?action=login', { method: 'POST', body: fd, credentials: 'include' });
+                    const data = await res.json();
+
+                    if (!res.ok || !data.success) {
+                        error.textContent = data.error || 'Anmeldung fehlgeschlagen.';
+                        error.classList.remove('hidden');
+                        return;
+                    }
+
+                    window.location.href = 'admin/dashboard.php';
+                } catch (err) {
+                    error.textContent = 'Verbindungsfehler. Bitte erneut versuchen.';
+                    error.classList.remove('hidden');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span class="material-symbols-outlined">login</span>Anmelden';
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,532 @@
+/* ================================
+   WKC – Custom Styles
+   ================================ */
+
+:root {
+    --site-primary: #6F2282;
+    --site-secondary: #5b21b6;
+    --site-accent: #f59e0b;
+    --site-background: #f8faf9;
+    --site-surface: #ffffff;
+    --site-text: #1f2937;
+    --site-font-heading: "Luckiest Guy", "Public Sans", sans-serif;
+    --site-font-body: "Public Sans", sans-serif;
+}
+
+body {
+    background: var(--site-background);
+    color: var(--site-text);
+    font-family: var(--site-font-body);
+}
+
+@font-face {
+    font-family: 'Forte';
+    src: local('Forte'), local('ForteMT');
+    font-weight: normal;
+    font-style: normal;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--site-font-heading) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--site-font-heading);
+    letter-spacing: 0.01em;
+}
+
+a:hover {
+    color: var(--site-primary);
+}
+
+.brand-wordmark {
+    margin-left: 0.65rem;
+    color: var(--site-primary);
+    font-family: "Forte", "Luckiest Guy", "Public Sans", sans-serif;
+    display: inline-flex;
+    align-items: center;
+    height: 3rem;
+    font-size: 3rem;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.brand-wordmark-mobile {
+    height: 2.5rem;
+    font-size: 2.5rem;
+}
+
+/* CMS-aware utility overrides so Tailwind utility classes follow dynamic settings */
+.text-primary { color: var(--site-primary) !important; }
+.bg-primary { background-color: var(--site-primary) !important; }
+.border-primary { border-color: var(--site-primary) !important; }
+.hover\:text-primary:hover { color: var(--site-primary) !important; }
+.hover\:bg-primary:hover { background-color: var(--site-primary) !important; }
+.hover\:bg-primary-dark:hover { background-color: var(--site-secondary) !important; }
+.bg-primary\/5 { background-color: color-mix(in srgb, var(--site-primary) 5%, transparent) !important; }
+.bg-primary\/10 { background-color: color-mix(in srgb, var(--site-primary) 10%, transparent) !important; }
+.bg-primary\/20 { background-color: color-mix(in srgb, var(--site-primary) 20%, transparent) !important; }
+.from-primary { --tw-gradient-from: var(--site-primary) var(--tw-gradient-from-position) !important; }
+.to-primary-dark { --tw-gradient-to: var(--site-secondary) var(--tw-gradient-to-position) !important; }
+
+.bg-bg-light { background-color: var(--site-background) !important; }
+.bg-bg-section { background-color: color-mix(in srgb, var(--site-background) 86%, #e5e7eb) !important; }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f3; }
+::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--site-primary) 25%, transparent); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--site-primary) 45%, transparent); }
+
+/* Material Symbols baseline fix */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+/* ================================
+   Animations
+   ================================ */
+
+/* Fade in up animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animate-fade-in-up {
+    opacity: 0;
+    animation: fadeInUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-fade-in {
+    opacity: 0;
+    animation: fadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Animation delays */
+.animation-delay-100 { animation-delay: 0.1s; }
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-300 { animation-delay: 0.3s; }
+.animation-delay-400 { animation-delay: 0.4s; }
+.animation-delay-500 { animation-delay: 0.5s; }
+
+/* Scroll animations */
+.scroll-animate {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-animate.animation-delay-100 {
+    transition-delay: 0.1s;
+}
+.scroll-animate.animation-delay-200 {
+    transition-delay: 0.2s;
+}
+.scroll-animate.animation-delay-300 {
+    transition-delay: 0.3s;
+}
+
+.scroll-animate.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ================================
+   Navigation
+   ================================ */
+
+/* Nav scrolled state */
+.nav-scrolled {
+    background: rgba(255, 255, 255, 0.97) !important;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.nav-scrolled .nav-link {
+    color: #374151 !important;
+}
+
+.nav-scrolled .nav-link:hover {
+    color: var(--site-primary) !important;
+    background: color-mix(in srgb, var(--site-primary) 8%, transparent) !important;
+}
+
+/* ================================
+   Mobile Menu
+   ================================ */
+
+#mobile-menu.open {
+    transform: translateY(0);
+}
+
+#mobile-menu-overlay.open {
+    display: block;
+    opacity: 1;
+}
+
+/* Menu button animation */
+#mobile-menu-btn.open .menu-icon {
+    opacity: 0;
+    transform: rotate(-90deg);
+}
+
+#mobile-menu-btn.open .close-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+
+/* ================================
+   Topic Cards (Accordion)
+   ================================ */
+
+.topic-card .topic-chevron.rotated {
+    transform: rotate(180deg);
+}
+
+.topic-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+}
+
+.topic-content.expanded {
+    display: block;
+    max-height: 1000px;
+}
+
+/* ================================
+   Contact Form
+   ================================ */
+
+.wkc-form-shell {
+    width: min(100%, 860px);
+    margin-inline: auto;
+}
+
+.wkc-dynamic-form {
+    display: grid;
+    gap: 1.1rem;
+}
+
+.wkc-dynamic-form > div,
+.wkc-dynamic-form > .wkc-signature-field {
+    width: 100%;
+}
+
+.wkc-dynamic-form label,
+#contact-form label,
+#membership-form label,
+#memberLoginForm label {
+    display: block;
+}
+
+.wkc-dynamic-form input,
+.wkc-dynamic-form select,
+.wkc-dynamic-form textarea,
+#contact-form input,
+#contact-form select,
+#contact-form textarea,
+#membership-form input,
+#membership-form select,
+#membership-form textarea,
+#memberLoginForm input,
+#memberLoginForm select,
+#memberLoginForm textarea {
+    min-height: 2.85rem;
+    border-radius: 0.75rem;
+}
+
+@media (min-width: 768px) {
+    .wkc-dynamic-form {
+        gap: 1.3rem;
+    }
+
+    .wkc-form-shell {
+        padding-inline: clamp(1.25rem, 1.5vw, 2rem);
+    }
+}
+
+form:not(.wkc-dynamic-form):not(#profileForm):not(#passwordForm) {
+    max-width: 100%;
+}
+
+/* Anonymous mode styles */
+.anonymous-mode .anon-hideable {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* Form success/error */
+.form-success {
+    background: #f3e8ff;
+    color: #5b21b6;
+    border: 1px solid #d8b4fe;
+}
+
+.form-error {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+/* ================================
+   Back to Top Button
+   ================================ */
+
+#back-to-top.visible {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+}
+
+/* ================================
+   Utilities
+   ================================ */
+
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+}
+
+/* Selection color */
+::selection {
+    background: color-mix(in srgb, var(--site-primary) 15%, transparent);
+    color: var(--site-primary);
+}
+
+/* Focus ring */
+:focus-visible {
+    outline: 2px solid var(--site-primary);
+    outline-offset: 2px;
+}
+
+/* ================================
+   Admin / Backend Styles
+   ================================ */
+
+.admin-sidebar-link.active {
+    background: rgba(124, 58, 237, 0.12);
+    color: #7c3aed;
+    font-weight: 700;
+}
+
+/* WYSIWYG Editor container */
+.editor-content {
+    min-height: 300px;
+    outline: none;
+}
+
+.editor-content:empty:before {
+    content: "Beginnen Sie hier zu schreiben...";
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+.editor-toolbar button.active {
+    background: rgba(124, 58, 237, 0.12);
+    color: #7c3aed;
+}
+
+/* Status badges */
+.badge-published {
+    background: rgba(124, 58, 237, 0.12);
+    color: #7c3aed;
+}
+
+.badge-draft {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-archived {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+/* ================================
+   Article / Blog page
+   ================================ */
+
+.prose-wkc h2 {
+    margin-top: 2em;
+    margin-bottom: 0.75em;
+    font-weight: 800;
+    color: #111827;
+}
+
+.prose-wkc p {
+    margin-bottom: 1em;
+    line-height: 1.8;
+    color: #374151;
+}
+
+.prose-wkc blockquote {
+    border-left: 4px solid #7c3aed;
+    padding: 1.5em;
+    margin: 2em 0;
+    background: #f8faf9;
+    border-radius: 0 0.75rem 0.75rem 0;
+    font-style: italic;
+    color: #4b5563;
+}
+
+.prose-wkc ul {
+    list-style: none;
+    padding: 0;
+}
+
+.prose-wkc ul li {
+    position: relative;
+    padding-left: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+.prose-wkc ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: #7c3aed;
+}
+
+/* ================================
+   Timeline (Über-uns Seite)
+   ================================ */
+
+.timeline-line {
+    background: linear-gradient(180deg, #7c3aed 0%, #e5e7eb 20%, #e5e7eb 80%, #7c3aed 100%);
+}
+
+.timeline-dot {
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+}
+
+.scroll-animate.visible .timeline-dot {
+    animation: timelineDotPulse 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes timelineDotPulse {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.4);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* ================================
+   Profile page
+   ================================ */
+
+.profile-hero-gradient {
+    background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 50%, #4c1d95 100%);
+}
+
+/* ================================
+   Garden page
+   ================================ */
+
+.garden-demo {
+    position: relative;
+    overflow: hidden;
+    max-width: 960px;
+    margin: 0 auto;
+    background: linear-gradient(145deg, #ffffff 0%, #f7f5ff 100%);
+    border: 1px solid #e5e7eb;
+    border-radius: 1.25rem;
+    padding: clamp(1rem, 2vw, 2.1rem);
+    box-shadow: 0 24px 56px -36px rgba(17, 24, 39, 0.45);
+}
+
+.garden-demo::before {
+    content: "";
+    position: absolute;
+    top: -130px;
+    right: -110px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--site-primary) 22%, #ffffff) 0%, rgba(255, 255, 255, 0) 68%);
+    pointer-events: none;
+}
+
+.garden-demo-kicker {
+    margin: 0;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--site-primary) 75%, #111827);
+    font-weight: 800;
+}
+
+.garden-demo-title {
+    margin: 0.45rem 0 1rem;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    color: #111827;
+}
+
+.garden-demo-figure {
+    position: relative;
+    margin: 0;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: 0 20px 40px -25px rgba(17, 24, 39, 0.6);
+}
+
+.garden-demo-image {
+    display: block;
+    width: 100%;
+    height: clamp(300px, 52vw, 560px);
+    object-fit: cover;
+    filter: saturate(1.08) contrast(1.04);
+    transform: scale(1.01);
+}
+
+.garden-demo-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 1rem 1.15rem;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: linear-gradient(180deg, rgba(17, 24, 39, 0) 0%, rgba(17, 24, 39, 0.7) 100%);
+}
+
+/* ================================
+   Responsive adjustments
+   ================================ 
+
+@media (max-width: 1023px) {
+    body {
+        padding-bottom: 80px;
+    }
+}
+*/

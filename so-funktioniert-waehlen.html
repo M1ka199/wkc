@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>So funktioniert WÃ¤hlen â€“ WKC</title>
+    <meta name="description" content="ErstwÃ¤hler-Guide fÃ¼r die Kommunalwahl: Wahlbenachrichtigung, Stimmzettel, Kumulieren, Panaschieren und Briefwahl einfach erklÃ¤rt." />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { primary: "#7c3aed", "primary-dark": "#5b21b6", "bg-light": "#f8faf9" }, fontFamily: { sans: ["Public Sans", "system-ui", "sans-serif"] } } }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/css/style.css?v=2502191430" />
+
+    <style>
+        .vote-mode[aria-pressed="true"] { border-color:#7c3aed; background:#f0fdf4; }
+        .ballot-row { display:flex; align-items:center; gap:.75rem; padding:.5rem .75rem; border-radius:.75rem; background:#f8faf9; border:1px solid #e5e7eb; }
+        .ballot-row .name { font-weight:600; color:#111827; flex:1; }
+        .ballot-row .marks { display:flex; gap:.25rem; }
+        .ballot-row .check { width:1.25rem; height:1.25rem; border:2px solid #d1d5db; border-radius:.25rem; display:inline-flex; align-items:center; justify-content:center; color:transparent; font-weight:900; }
+        .ballot-row .check.on { border-color:#7c3aed; color:#7c3aed; background:#dcfce7; }
+    </style>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        (function () {
+            const modes = {
+                kumulieren: {
+                    title: 'Beispiel: Kumulieren',
+                    desc: 'Alle 3 Stimmen gehen an dieselbe Person oder Liste â€“ das stÃ¤rkt sie besonders.',
+                    rows: [
+                        { name: 'WKC â€“ A. MÃ¼ller', marks: 3 },
+                        { name: 'WKC â€“ B. Schmidt', marks: 0 },
+                        { name: 'SPD â€“ C. Weber', marks: 0 },
+                        { name: 'CDU â€“ D. Schulz', marks: 0 }
+                    ]
+                },
+                panaschieren: {
+                    title: 'Beispiel: Panaschieren',
+                    desc: 'Du verteilst deine 3 Stimmen auf 3 verschiedene Personen oder Listen.',
+                    rows: [
+                        { name: 'WKC â€“ A. MÃ¼ller', marks: 1 },
+                        { name: 'WKC â€“ B. Schmidt', marks: 1 },
+                        { name: 'SPD â€“ C. Weber', marks: 1 },
+                        { name: 'CDU â€“ D. Schulz', marks: 0 }
+                    ]
+                },
+                mix: {
+                    title: 'Beispiel: Mischen',
+                    desc: '2 Stimmen fÃ¼r deine Favoritin, 1 Stimme fÃ¼r jemand anderen â€“ Zwischenform aus Kumulieren und Panaschieren.',
+                    rows: [
+                        { name: 'WKC â€“ A. MÃ¼ller', marks: 2 },
+                        { name: 'WKC â€“ B. Schmidt', marks: 0 },
+                        { name: 'SPD â€“ C. Weber', marks: 1 },
+                        { name: 'CDU â€“ D. Schulz', marks: 0 }
+                    ]
+                }
+            };
+            const titleEl = document.getElementById('mode-title');
+            const descEl = document.getElementById('mode-desc');
+            const demoEl = document.getElementById('ballot-demo');
+            function render(mode) {
+                const m = modes[mode]; if (!m) return;
+                titleEl.textContent = m.title;
+                descEl.textContent = m.desc;
+                demoEl.innerHTML = m.rows.map(r => {
+                    const checks = [0, 1, 2].map(i => `<span class="check ${i < r.marks ? 'on' : ''}">${i < r.marks ? 'Ã¢Å“â€œ' : ''}</span>`).join('');
+                    return `<div class="ballot-row"><span class="name">${r.name}</span><span class="marks">${checks}</span></div>`;
+                }).join('');
+            }
+            const btns = document.querySelectorAll('.vote-mode');
+            btns.forEach(b => b.addEventListener('click', () => {
+                btns.forEach(x => x.setAttribute('aria-pressed', 'false'));
+                b.setAttribute('aria-pressed', 'true');
+                render(b.dataset.mode);
+            }));
+            render('kumulieren');
+        })();
+    });
+    </script>
+
+</head>
+<body class="bg-bg-light text-gray-800 antialiased font-sans">
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-md shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <a href="/" class="flex items-center group">
+                    <img src="src/wkc-logo.svg" data-brand-logo="header" alt="WKC Logo" class="h-12" onerror="this.style.display='none'" />
+                </a>
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="/" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Startseite</a>
+                    <a href="neuigkeiten.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Neuigkeiten</a>
+                    <a href="themen.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Themen</a>
+                    <div class="relative group">
+                        <button class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all flex items-center gap-1">
+                            Kommunalwahlen
+                            <span class="material-symbols-outlined text-base transition-transform group-hover:rotate-180">expand_more</span>
+                        </button>
+                        <div class="absolute top-full right-0 pt-2 w-72 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-2">
+                                <a href="kommunalwahl-2026.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">how_to_vote</span>
+                                    <div><div class="font-bold text-sm text-gray-900">Kommunalwahl 2026</div><div class="text-xs text-gray-500 leading-tight">Unsere Themen fÃ¼r die kommende Wahl</div></div>
+                                </a>
+                                <a href="kommunalwahlen-2021.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">history</span>
+                                    <div><div class="font-bold text-sm text-gray-900">Kommunalwahl 2021</div><div class="text-xs text-gray-500 leading-tight">Wahlergebnis &amp; erreichte Ziele</div></div>
+                                </a>
+                                <a href="so-funktioniert-waehlen.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">school</span>
+                                    <div><div class="font-bold text-sm text-gray-900">So funktioniert WÃ¤hlen</div><div class="text-xs text-gray-500 leading-tight">ErstwÃ¤hler-Guide &amp; Briefwahl</div></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/#vorstand" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Vorstand</a>
+                    <a href="/#mitglied-werden" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Mitmachen</a>
+                    <a href="/#kontakt" class="ml-2 px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40">Kontakt</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===================== MOBILE MENU ===================== -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300 lg:hidden"></div>
+    <div id="mobile-menu" class="fixed bottom-0 left-0 right-0 z-[999] lg:hidden translate-y-full transition-transform duration-500 ease-out">
+        <div class="bg-white rounded-t-3xl shadow-2xl shadow-black/20 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-center pt-3 pb-2"><div class="w-12 h-1.5 bg-gray-300 rounded-full"></div></div>
+            <div class="px-6 pb-4">
+                <p class="text-xs font-bold text-primary uppercase tracking-widest mb-3">Navigation</p>
+                <img src="src/wkc-logo.svg" data-brand-logo="header" alt="WKC Logo" class="h-10 mb-4" onerror="this.style.display='none'" />
+            </div>
+            <nav class="px-6 pb-8 space-y-1">
+                <a href="/" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">home</span><span class="font-semibold">Startseite</span></a>
+                <a href="neuigkeiten.html" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">newspaper</span><span class="font-semibold">Neuigkeiten</span></a>
+                <a href="themen.html" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">flag</span><span class="font-semibold">Themen</span></a>
+                <details class="group">
+                    <summary class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                        <span class="material-symbols-outlined text-primary/60">how_to_vote</span>
+                        <span class="font-semibold flex-1">Kommunalwahlen</span>
+                        <span class="material-symbols-outlined text-gray-400 transition-transform group-open:rotate-180">expand_more</span>
+                    </summary>
+                    <div class="ml-10 mt-1 space-y-1 mb-1">
+                        <a href="kommunalwahl-2026.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">Kommunalwahl 2026</a>
+                        <a href="kommunalwahlen-2021.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">Kommunalwahl 2021</a>
+                        <a href="so-funktioniert-waehlen.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">So funktioniert WÃ¤hlen</a>
+                    </div>
+                </details>
+                <a href="/#vorstand" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">groups</span><span class="font-semibold">Vorstand</span></a>
+                <a href="/#mitglied-werden" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">group_add</span><span class="font-semibold">Mitmachen</span></a>
+                <a href="/#kontakt" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">mail</span><span class="font-semibold">Kontakt</span></a>
+            </nav>
+            <div class="px-6 pb-8 pt-4 border-t border-gray-100">
+                <div class="flex gap-4 text-xs text-gray-400">
+                    <a href="impressum.html" class="hover:text-primary transition-colors">Impressum</a>
+                    <a href="datenschutz.html" class="hover:text-primary transition-colors">Datenschutz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="mobile-menu-btn" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[1000] lg:hidden w-14 h-14 bg-primary text-white rounded-full shadow-xl shadow-primary/30 flex items-center justify-center hover:bg-primary-dark transition-all active:scale-95">
+        <span class="material-symbols-outlined text-2xl menu-icon transition-transform duration-300">menu</span>
+        <span class="material-symbols-outlined text-2xl close-icon absolute transition-transform duration-300 opacity-0 rotate-90">close</span>
+    </button>
+
+    
+    <!-- ===================== HERO ===================== -->
+    <header class="pt-20 bg-gradient-to-br from-primary to-primary-dark relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 right-1/4 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20 relative z-10">
+            <nav class="text-sm text-white/60 mb-6">
+                <a href="/" class="hover:text-white transition-colors">Startseite</a>
+                <span class="mx-2">/</span>
+                <span>Kommunalwahlen</span>
+                <span class="mx-2">/</span>
+                <span class="text-white font-medium">So funktioniert WÃ¤hlen</span>
+            </nav>
+            <div class="text-center max-w-3xl mx-auto">
+                <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-md text-white text-sm font-semibold mb-6 border border-white/20">
+                    <span class="material-symbols-outlined text-base">school</span>
+                    ErstwÃ¤hler-Guide &middot; In 5 Minuten alles wissen
+                </span>
+                <h1 class="text-3xl md:text-5xl font-black text-white mb-4 leading-tight">So funktioniert die Kommunalwahl</h1>
+                <p class="text-lg text-white/80 leading-relaxed">
+                    Du wÃ¤hlst zum ersten Mal? Oder willst nochmal genau wissen, wie das mit Kumulieren, Panaschieren und Briefwahl funktioniert?
+                    Hier bekommst du in einfachen Schritten alles, was du brauchst.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div class="lg:grid lg:grid-cols-[260px_minmax(0,1fr)] lg:gap-12 xl:gap-16">
+            <!-- ===================== STEP NAV ===================== -->
+            <aside class="mb-8 lg:mb-0">
+                <nav class="lg:sticky lg:top-28 bg-white border border-gray-100 rounded-2xl shadow-sm p-4 lg:p-5">
+                    <p class="text-xs font-bold text-primary uppercase tracking-widest mb-3 px-2">Inhalt</p>
+                    <ol id="step-nav" class="grid grid-cols-2 gap-1 text-sm font-semibold text-gray-600 lg:flex lg:flex-col">
+                        <li><a href="#wer" class="step-link flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-primary/5 hover:text-primary transition-all"><span class="w-7 h-7 rounded-lg bg-primary/10 text-primary text-xs font-black flex items-center justify-center flex-shrink-0">1</span><span class="leading-tight">Wer darf wÃ¤hlen?</span></a></li>
+                        <li><a href="#brief" class="step-link flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-primary/5 hover:text-primary transition-all"><span class="w-7 h-7 rounded-lg bg-primary/10 text-primary text-xs font-black flex items-center justify-center flex-shrink-0">2</span><span class="leading-tight">WahlÂ­benachrichtigung</span></a></li>
+                        <li><a href="#stimmzettel" class="step-link flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-primary/5 hover:text-primary transition-all"><span class="w-7 h-7 rounded-lg bg-primary/10 text-primary text-xs font-black flex items-center justify-center flex-shrink-0">3</span><span class="leading-tight">StimmÂ­zettel</span></a></li>
+                        <li><a href="#kumulieren" class="step-link flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-primary/5 hover:text-primary transition-all"><span class="w-7 h-7 rounded-lg bg-primary/10 text-primary text-xs font-black flex items-center justify-center flex-shrink-0">4</span><span class="leading-tight">Kumulieren &amp; Panaschieren</span></a></li>
+                        <li><a href="#briefwahl" class="step-link flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-primary/5 hover:text-primary transition-all"><span class="w-7 h-7 rounded-lg bg-primary/10 text-primary text-xs font-black flex items-center justify-center flex-shrink-0">5</span><span class="leading-tight">Briefwahl</span></a></li>
+                        <li><a href="#wieso" class="step-link flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-primary/5 hover:text-primary transition-all"><span class="w-7 h-7 rounded-lg bg-primary/10 text-primary text-xs font-black flex items-center justify-center flex-shrink-0">6</span><span class="leading-tight">Wieso wÃ¤hlen?</span></a></li>
+                    </ol>
+                </nav>
+            </aside>
+
+            <div class="space-y-16 min-w-0">
+            <!-- 1: Wer darf wÃ¤hlen -->
+            <section id="wer" class="scroll-mt-32">
+                <div class="flex items-center gap-3 mb-5">
+                    <span class="w-10 h-10 rounded-2xl bg-primary text-white text-lg font-black flex items-center justify-center">1</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900">Wer darf wÃ¤hlen?</h2>
+                </div>
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center md:text-left">
+                        <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4 mx-auto md:mx-0"><span class="material-symbols-outlined text-3xl">cake</span></div>
+                        <h3 class="font-bold text-gray-900 mb-1">Mindestens 16 Jahre</h3>
+                        <p class="text-sm text-gray-500">am Wahltag.</p>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4 mx-auto md:mx-0"><span class="material-symbols-outlined text-3xl">home</span></div>
+                        <h3 class="font-bold text-gray-900 mb-1">3 Monate Wohnsitz</h3>
+                        <p class="text-sm text-gray-500">in Niedersachsen vor der Wahl.</p>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-4 mx-auto md:mx-0"><span class="material-symbols-outlined text-3xl">flag</span></div>
+                        <h3 class="font-bold text-gray-900 mb-1">EU-StaatsangehÃ¶rigkeit</h3>
+                        <p class="text-sm text-gray-500">deutsche oder andere EU-BÃ¼rgerschaft.</p>
+                    </div>
+                </div>
+                <p class="mt-4 text-sm text-gray-500 italic">Tipp: Du musst dich nicht selbst um die Eintragung ins WÃ¤hlerverzeichnis kÃ¼mmern â€“ das Ã¼bernimmt das Einwohnermeldeamt automatisch.</p>
+            </section>
+
+            <!-- 2: Wahlbenachrichtigung -->
+            <section id="brief" class="scroll-mt-32">
+                <div class="flex items-center gap-3 mb-5">
+                    <span class="w-10 h-10 rounded-2xl bg-primary text-white text-lg font-black flex items-center justify-center">2</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900">Wahlbenachrichtigung per Post</h2>
+                </div>
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <p class="text-gray-600 leading-relaxed mb-4">Rechtzeitig vor der Wahl bekommst du Post: deine <strong>Wahlbenachrichtigung</strong>. Darauf steht alles, was du wissen musst.</p>
+                        <ul class="space-y-2 text-sm">
+                            <li class="flex gap-2"><span class="material-symbols-outlined text-primary">place</span><span><strong>Wahlraum</strong> â€“ meist Schule, Rathaus oder ein Ã¶ffentliches GebÃ¤ude in deiner NÃ¤he</span></li>
+                            <li class="flex gap-2"><span class="material-symbols-outlined text-primary">schedule</span><span><strong>Ã–ffnungszeit</strong> â€“ am Wahlsonntag in der Regel 8â€“18 Uhr</span></li>
+                            <li class="flex gap-2"><span class="material-symbols-outlined text-primary">badge</span><span>Bring deine <strong>Wahlbenachrichtigung</strong> &amp; deinen <strong>Personalausweis</strong> mit</span></li>
+                        </ul>
+                    </div>
+                    <img src="src/img/vote-letter.png" alt="Wahlbenachrichtigung â€“ Beispiel" class="w-full h-auto rounded-2xl" loading="lazy" />
+                </div>
+            </section>
+
+            <!-- 3: Stimmzettel -->
+            <section id="stimmzettel" class="scroll-mt-32">
+                <div class="flex items-center gap-3 mb-5">
+                    <span class="w-10 h-10 rounded-2xl bg-primary text-white text-lg font-black flex items-center justify-center">3</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900">So sieht der Stimmzettel aus</h2>
+                </div>
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-10">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <img src="src/img/stimmzettel-muster.png" alt="Beispiel-Stimmzettel" class="w-full h-auto rounded-2xl border border-gray-200" loading="lazy" />
+                        <div class="space-y-4 text-gray-600 leading-relaxed">
+                            <p>Im Wahlraum bekommst du einen oder mehrere <strong>Stimmzettel</strong>. Pro Wahl (Gemeinderat, Samtgemeinderat, Kreistag â€¦) gibt es einen Zettel.</p>
+                            <p>Mit dem Stimmzettel gehst du in die <strong>Wahlkabine</strong> â€“ dort sieht niemand, wen du wÃ¤hlst. Stifte liegen bereit. Wahlen sind geheim.</p>
+                            <div class="bg-primary/5 border-l-4 border-primary px-4 py-3 rounded">
+                                <p class="text-primary font-bold text-sm">Wichtig:</p>
+                                <p class="text-sm text-gray-700">Bei Kommunalwahlen hast du <strong>3 Stimmen</strong> pro Stimmzettel. Bei BÃ¼rgermeister/Landrat-Wahlen nur <strong>1 Stimme</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4: Kumulieren & Panaschieren -->
+            <section id="kumulieren" class="scroll-mt-32">
+                <div class="flex items-center gap-3 mb-5">
+                    <span class="w-10 h-10 rounded-2xl bg-primary text-white text-lg font-black flex items-center justify-center">4</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900">Kumulieren &amp; Panaschieren</h2>
+                </div>
+                <p class="text-gray-600 mb-6 leading-relaxed">Du hast 3 Stimmen pro Wahl. Wie du sie verteilst, entscheidest du selbst. Klick durch die drei Optionen:</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button type="button" class="vote-mode group bg-white rounded-2xl border-2 border-gray-100 hover:border-primary p-6 text-left transition-all" data-mode="kumulieren" aria-pressed="true">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined">stacked_bar_chart</span></div>
+                            <span class="text-xs font-bold text-primary uppercase">Option A</span>
+                        </div>
+                        <h3 class="font-extrabold text-gray-900 mb-1">Kumulieren</h3>
+                        <p class="text-sm text-gray-500">Alle 3 Stimmen einer Person/Liste.</p>
+                    </button>
+                    <button type="button" class="vote-mode group bg-white rounded-2xl border-2 border-gray-100 hover:border-primary p-6 text-left transition-all" data-mode="panaschieren">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined">spread</span></div>
+                            <span class="text-xs font-bold text-primary uppercase">Option B</span>
+                        </div>
+                        <h3 class="font-extrabold text-gray-900 mb-1">Panaschieren</h3>
+                        <p class="text-sm text-gray-500">3 Stimmen auf 3 verschiedene verteilen.</p>
+                    </button>
+                    <button type="button" class="vote-mode group bg-white rounded-2xl border-2 border-gray-100 hover:border-primary p-6 text-left transition-all" data-mode="mix">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined">tune</span></div>
+                            <span class="text-xs font-bold text-primary uppercase">Option C</span>
+                        </div>
+                        <h3 class="font-extrabold text-gray-900 mb-1">Mischen</h3>
+                        <p class="text-sm text-gray-500">2 Stimmen fÃ¼r eine, 1 fÃ¼r eine andere.</p>
+                    </button>
+                </div>
+
+                <!-- Visual demo -->
+                <div class="mt-8 bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-10">
+                    <p id="mode-title" class="font-bold text-lg text-gray-900 mb-2">Beispiel: Kumulieren</p>
+                    <p id="mode-desc" class="text-gray-600 mb-6 leading-relaxed">Du gibst alle drei Stimmen einer Liste oder einer einzigen Kandidatin / einem Kandidaten. Das stÃ¤rkt diese Person besonders.</p>
+                    <div id="ballot-demo" class="space-y-3"></div>
+                </div>
+
+                <div class="mt-6 bg-amber-50 border-l-4 border-amber-400 rounded-r-xl px-5 py-4">
+                    <p class="text-amber-800 text-sm"><strong>Achtung:</strong> Mehr als 3 Kreuze auf einem Stimmzettel Ã¢â€¡â€™ Stimme ungÃ¼ltig. Nicht mehr und nicht weniger.</p>
+                </div>
+            </section>
+
+            <!-- 5: Briefwahl -->
+            <section id="briefwahl" class="scroll-mt-32">
+                <div class="flex items-center gap-3 mb-5">
+                    <span class="w-10 h-10 rounded-2xl bg-primary text-white text-lg font-black flex items-center justify-center">5</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900">Briefwahl: wenn du am Wahltag nicht kannst</h2>
+                </div>
+                <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-10 space-y-4 text-gray-600 leading-relaxed">
+                    <p>Du bist am Wahltag im Urlaub, bei der Arbeit oder krank? Dann kannst du <strong>per Brief</strong> wÃ¤hlen â€“ auch das ist sicher und vollkommen normal.</p>
+                    <ol class="list-decimal pl-5 space-y-2">
+                        <li>Briefwahl-Antrag stellen (Ã¼ber das Formular auf deiner Wahlbenachrichtigung oder online).</li>
+                        <li>Wahlunterlagen kommen per Post â€“ darin findest du Stimmzettel und einen Wahlumschlag.</li>
+                        <li>In Ruhe ankreuzen, alles in den Umschlag und rechtzeitig zurÃ¼cksenden â€“ oder direkt im Rathaus abgeben.</li>
+                    </ol>
+                    <div class="bg-primary/5 border-l-4 border-primary px-4 py-3 rounded">
+                        <p class="text-primary font-bold text-sm">Wichtig:</p>
+                        <p class="text-sm text-gray-700">Die Briefwahl-Unterlagen mÃ¼ssen <strong>vor SchlieÃŸung der Wahllokale am Wahltag</strong> bei der Gemeinde sein. Lieber ein paar Tage frÃ¼her abschicken!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6: Wieso wÃ¤hlen -->
+            <section id="wieso" class="scroll-mt-32">
+                <div class="flex items-center gap-3 mb-5">
+                    <span class="w-10 h-10 rounded-2xl bg-primary text-white text-lg font-black flex items-center justify-center">6</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900">Wieso Ã¼berhaupt wÃ¤hlen?</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                        <span class="material-symbols-outlined text-primary text-3xl">handshake</span>
+                        <h3 class="font-bold text-lg text-gray-900 mt-2 mb-1">Es geht um <em>deinen</em> Ort.</h3>
+                        <p class="text-sm text-gray-600">Spielplatz, Bus, Internet, Energie: in der Kommune wird konkret entschieden, was du im Alltag siehst und nutzt.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                        <span class="material-symbols-outlined text-primary text-3xl">check_circle</span>
+                        <h3 class="font-bold text-lg text-gray-900 mt-2 mb-1">Jede Stimme zÃ¤hlt.</h3>
+                        <p class="text-sm text-gray-600">Auf Dorfebene macht eine einzige Stimme oft den Unterschied â€“ mehr als bei jeder Bundestagswahl.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                        <span class="material-symbols-outlined text-primary text-3xl">campaign</span>
+                        <h3 class="font-bold text-lg text-gray-900 mt-2 mb-1">Mitmachen statt meckern.</h3>
+                        <p class="text-sm text-gray-600">Wer zur Wahl geht, mischt sich ein â€“ und macht klar: <em>Mein Wulften gestalte ich mit</em>.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                        <span class="material-symbols-outlined text-primary text-3xl">workspace_premium</span>
+                        <h3 class="font-bold text-lg text-gray-900 mt-2 mb-1">Demokratie ist ein Privileg.</h3>
+                        <p class="text-sm text-gray-600">Nicht Ã¼berall auf der Welt darf man wÃ¤hlen. Nutze dieses Recht â€“ und sei Vorbild fÃ¼r andere.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA -->
+            <section class="bg-gradient-to-br from-primary to-primary-dark rounded-3xl p-10 md:p-14 text-center text-white relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+                </div>
+                <div class="relative z-10 max-w-2xl mx-auto">
+                    <span class="material-symbols-outlined text-5xl mb-4">how_to_vote</span>
+                    <h2 class="text-2xl md:text-3xl font-extrabold mb-4">Bereit fÃ¼r deine Stimme?</h2>
+                    <p class="text-white/80 mb-8 leading-relaxed">Schau dir an, wofÃ¼r wir 2026 antreten â€“ damit du genau weiÃŸt, was du mit deinen drei Stimmen bewirken kannst.</p>
+                    <a href="kommunalwahl-2026.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary font-bold rounded-full hover:bg-gray-100 transition-all">
+                        Themen 2026 ansehen
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 text-white pt-16 pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="md:col-span-2">
+                    <p class="text-gray-400 max-w-sm leading-relaxed text-sm">
+                        Die WKC ist ein engagierter Karnevalsverein fÃ¼r Gemeinschaft, Brauchtum und gelebte Tradition.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Navigation</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="/" class="text-gray-400 hover:text-primary transition-colors">Startseite</a></li>
+                        <li><a href="neuigkeiten.html" class="text-gray-400 hover:text-primary transition-colors">Neuigkeiten</a></li>
+                        <li><a href="/#vorstand" class="text-gray-400 hover:text-primary transition-colors">Vorstand</a></li>
+                        <li><a href="themen.html" class="text-gray-400 hover:text-primary transition-colors">Themen & Ziele</a></li>
+                        <li><a href="/#kontakt" class="text-gray-400 hover:text-primary transition-colors">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Rechtliches</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="impressum.html" class="text-gray-400 hover:text-primary transition-colors">Impressum</a></li>
+                        <li><a href="datenschutz.html" class="text-gray-400 hover:text-primary transition-colors">Datenschutz</a></li>
+                    </ul>
+                    <div class="mt-6">
+                        <h4 class="font-bold mb-3 text-sm uppercase tracking-widest text-gray-400">Kontakt</h4>
+                        <div class="flex items-center gap-2 text-sm text-gray-400">
+                            <span class="material-symbols-outlined text-primary text-base">mail</span>
+                            info@zukunft-wulften.de
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2021 â€“ 2026 WKC. Alle Rechte vorbehalten.</p>
+                <div class="flex items-center gap-4 mt-3 md:mt-0">
+                    <span>Gemeinsam fÃ¼r unsere Heimat.</span>
+                    <a href="admin/" class="hover:text-primary transition-colors">Login</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+    (function initMobileMenu() {
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('mobile-menu-overlay');
+        if (!btn || !menu || !overlay) return;
+        const menuIcon = btn.querySelector('.menu-icon');
+        const closeIcon = btn.querySelector('.close-icon');
+        let open = false;
+        function toggle() {
+            open = !open;
+            if (open) {
+                menu.classList.remove('translate-y-full');
+                overlay.classList.remove('hidden');
+                requestAnimationFrame(() => overlay.classList.replace('opacity-0', 'opacity-100'));
+                menuIcon.classList.add('opacity-0', 'rotate-90');
+                closeIcon.classList.remove('opacity-0', 'rotate-90');
+            } else {
+                menu.classList.add('translate-y-full');
+                overlay.classList.replace('opacity-100', 'opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                menuIcon.classList.remove('opacity-0', 'rotate-90');
+                closeIcon.classList.add('opacity-0', 'rotate-90');
+            }
+        }
+        btn.addEventListener('click', toggle);
+        overlay.addEventListener('click', toggle);
+        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { if (open) toggle(); }));
+    })();
+    </script>
+    <script src="src/js/site-config.js"></script>
+</body>
+</html>

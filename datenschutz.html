@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Datenschutz â€“ WKC</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { primary: "#7c3aed", "primary-dark": "#5b21b6", "bg-light": "#f8faf9" }, fontFamily: { sans: ["Public Sans", "system-ui", "sans-serif"] } } }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/css/style.css?v=2502191430" />
+</head>
+<body class="bg-bg-light text-gray-800 antialiased font-sans">
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-md shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <a href="/" class="flex items-center group">
+                    <img src="src/wkc-logo.svg" data-brand-logo="header" alt="WKC Logo" class="h-12" onerror="this.style.display='none'" />
+                </a>
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="/" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Startseite</a>
+                    <a href="neuigkeiten.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Neuigkeiten</a>
+                    <a href="themen.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Themen</a>
+                    <div class="relative group">
+                        <button class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all flex items-center gap-1">
+                            Kommunalwahlen
+                            <span class="material-symbols-outlined text-base transition-transform group-hover:rotate-180">expand_more</span>
+                        </button>
+                        <div class="absolute top-full right-0 pt-2 w-72 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-2">
+                                <a href="kommunalwahl-2026.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">how_to_vote</span>
+                                    <div><div class="font-bold text-sm text-gray-900">Kommunalwahl 2026</div><div class="text-xs text-gray-500 leading-tight">Unsere Themen fÃ¼r die kommende Wahl</div></div>
+                                </a>
+                                <a href="kommunalwahlen-2021.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">history</span>
+                                    <div><div class="font-bold text-sm text-gray-900">Kommunalwahl 2021</div><div class="text-xs text-gray-500 leading-tight">Wahlergebnis &amp; erreichte Ziele</div></div>
+                                </a>
+                                <a href="so-funktioniert-waehlen.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">school</span>
+                                    <div><div class="font-bold text-sm text-gray-900">So funktioniert WÃ¤hlen</div><div class="text-xs text-gray-500 leading-tight">ErstwÃ¤hler-Guide &amp; Briefwahl</div></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/#vorstand" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Vorstand</a>
+                    <a href="/#mitglied-werden" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Mitmachen</a>
+                    <a href="/#kontakt" class="ml-2 px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40">Kontakt</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===================== MOBILE MENU ===================== -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300 lg:hidden"></div>
+    <div id="mobile-menu" class="fixed bottom-0 left-0 right-0 z-[999] lg:hidden translate-y-full transition-transform duration-500 ease-out">
+        <div class="bg-white rounded-t-3xl shadow-2xl shadow-black/20 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-center pt-3 pb-2"><div class="w-12 h-1.5 bg-gray-300 rounded-full"></div></div>
+            <div class="px-6 pb-4">
+                <p class="text-xs font-bold text-primary uppercase tracking-widest mb-3">Navigation</p>
+                <img src="src/wkc-logo.svg" data-brand-logo="header" alt="WKC Logo" class="h-10 mb-4" onerror="this.style.display='none'" />
+            </div>
+            <nav class="px-6 pb-8 space-y-1">
+                <a href="/" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">home</span><span class="font-semibold">Startseite</span></a>
+                <a href="neuigkeiten.html" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">newspaper</span><span class="font-semibold">Neuigkeiten</span></a>
+                <a href="themen.html" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">flag</span><span class="font-semibold">Themen</span></a>
+                <details class="group">
+                    <summary class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                        <span class="material-symbols-outlined text-primary/60">how_to_vote</span>
+                        <span class="font-semibold flex-1">Kommunalwahlen</span>
+                        <span class="material-symbols-outlined text-gray-400 transition-transform group-open:rotate-180">expand_more</span>
+                    </summary>
+                    <div class="ml-10 mt-1 space-y-1 mb-1">
+                        <a href="kommunalwahl-2026.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">Kommunalwahl 2026</a>
+                        <a href="kommunalwahlen-2021.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">Kommunalwahl 2021</a>
+                        <a href="so-funktioniert-waehlen.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">So funktioniert WÃ¤hlen</a>
+                    </div>
+                </details>
+                <a href="/#vorstand" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">groups</span><span class="font-semibold">Vorstand</span></a>
+                <a href="/#mitglied-werden" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">group_add</span><span class="font-semibold">Mitmachen</span></a>
+                <a href="/#kontakt" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">mail</span><span class="font-semibold">Kontakt</span></a>
+            </nav>
+            <div class="px-6 pb-8 pt-4 border-t border-gray-100">
+                <div class="flex gap-4 text-xs text-gray-400">
+                    <a href="impressum.html" class="hover:text-primary transition-colors">Impressum</a>
+                    <a href="datenschutz.html" class="hover:text-primary transition-colors">Datenschutz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="mobile-menu-btn" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[1000] lg:hidden w-14 h-14 bg-primary text-white rounded-full shadow-xl shadow-primary/30 flex items-center justify-center hover:bg-primary-dark transition-all active:scale-95">
+        <span class="material-symbols-outlined text-2xl menu-icon transition-transform duration-300">menu</span>
+        <span class="material-symbols-outlined text-2xl close-icon absolute transition-transform duration-300 opacity-0 rotate-90">close</span>
+    </button>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-12 md:pb-16">
+        <div class="flex items-center gap-2 text-sm text-gray-400 mb-8">
+            <a href="/" class="hover:text-primary transition-colors">Startseite</a>
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+            <span class="text-gray-700 font-medium">Datenschutz</span>
+        </div>
+
+        <h1 class="text-3xl md:text-4xl font-black text-gray-900 mb-8">DatenschutzerklÃ¤rung</h1>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-10 space-y-8">
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 mb-3">1. Datenschutz auf einen Blick</h2>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Allgemeine Hinweise</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Die folgenden Hinweise geben einen einfachen Ãœberblick darÃ¼ber, was mit Ihren personenbezogenen Daten passiert,
+                    wenn Sie unsere Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persÃ¶nlich identifiziert
+                    werden kÃ¶nnen.
+                </p>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 mb-3">2. Verantwortliche Stelle</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    WKC<br />
+                    Thorsten Ehrhardt (1. Vorsitzender)<br />
+                    <!-- PLATZHALTER -->
+                    MusterstraÃŸe 1<br />
+                    37199 Wulften am Harz<br />
+                    E-Mail: info@zukunft-wulften.de
+                </p>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 mb-3">3. Datenerfassung auf unserer Website</h2>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Kontaktformular</h3>
+                <p class="text-gray-600 leading-relaxed mb-4">
+                    Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben aus dem Anfrageformular
+                    inklusive der von Ihnen dort angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und fÃ¼r den Fall
+                    von Anschlussfragen bei uns gespeichert. Diese Daten geben wir nicht ohne Ihre Einwilligung weiter.
+                </p>
+                <h3 class="text-lg font-semibold text-gray-800 mb-2">Anonyme Nachrichten</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Unser Kontaktformular bietet die MÃ¶glichkeit, Nachrichten anonym zu versenden.
+                    In diesem Fall werden lediglich Betreff und Nachrichtentext Ã¼bermittelt. Es werden keine
+                    personenbezogenen Daten wie Name oder E-Mail-Adresse erhoben oder gespeichert.
+                </p>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 mb-3">4. Server-Log-Dateien</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    Der Provider der Seiten erhebt und speichert automatisch Informationen in sogenannten Server-Log-Dateien,
+                    die Ihr Browser automatisch an uns Ã¼bermittelt. Dies sind: Browsertyp und Browserversion, verwendetes
+                    Betriebssystem, Referrer URL, Hostname des zugreifenden Rechners, Uhrzeit der Serveranfrage und IP-Adresse.
+                    Eine ZusammenfÃ¼hrung dieser Daten mit anderen Datenquellen wird nicht vorgenommen.
+                </p>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 mb-3">5. Cookies</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    Unsere Website verwendet keine Tracking-Cookies und keine Analyse-Tools von Drittanbietern.
+                    Es werden lediglich technisch notwendige Cookies verwendet, die fÃ¼r den Betrieb der Website erforderlich sind.
+                </p>
+            </div>
+
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 mb-3">6. Ihre Rechte</h2>
+                <p class="text-gray-600 leading-relaxed">
+                    Sie haben jederzeit das Recht, unentgeltlich Auskunft Ã¼ber Herkunft, EmpfÃ¤nger und Zweck Ihrer gespeicherten
+                    personenbezogenen Daten zu erhalten. Sie haben auÃŸerdem ein Recht, die Berichtigung, Sperrung oder LÃ¶schung
+                    dieser Daten zu verlangen. Hierzu sowie zu weiteren Fragen zum Thema Datenschutz kÃ¶nnen Sie sich jederzeit
+                    an uns wenden.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-900 text-white pt-16 pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="md:col-span-2">
+                    <p class="text-gray-400 max-w-sm leading-relaxed text-sm">
+                        Die WKC ist ein engagierter Karnevalsverein fÃ¼r Gemeinschaft, Brauchtum und gelebte Tradition.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Navigation</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="/" class="text-gray-400 hover:text-primary transition-colors">Startseite</a></li>
+                        <li><a href="neuigkeiten.html" class="text-gray-400 hover:text-primary transition-colors">Neuigkeiten</a></li>
+                        <li><a href="/#vorstand" class="text-gray-400 hover:text-primary transition-colors">Vorstand</a></li>
+                        <li><a href="themen.html" class="text-gray-400 hover:text-primary transition-colors">Themen & Ziele</a></li>
+                        <li><a href="/#kontakt" class="text-gray-400 hover:text-primary transition-colors">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Rechtliches</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="impressum.html" class="text-gray-400 hover:text-primary transition-colors">Impressum</a></li>
+                        <li><a href="datenschutz.html" class="text-gray-400 hover:text-primary transition-colors">Datenschutz</a></li>
+                    </ul>
+                    <div class="mt-6">
+                        <h4 class="font-bold mb-3 text-sm uppercase tracking-widest text-gray-400">Kontakt</h4>
+                        <div class="flex items-center gap-2 text-sm text-gray-400">
+                            <span class="material-symbols-outlined text-primary text-base">mail</span>
+                            info@zukunft-wulften.de
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2021 â€“ 2026 WKC. Alle Rechte vorbehalten.</p>
+                <div class="flex items-center gap-4 mt-3 md:mt-0">
+                    <span>Gemeinsam fÃ¼r unsere Heimat.</span>
+                    <a href="admin/" class="hover:text-primary transition-colors">Login</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+    (function initMobileMenu() {
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('mobile-menu-overlay');
+        if (!btn || !menu || !overlay) return;
+        const menuIcon = btn.querySelector('.menu-icon');
+        const closeIcon = btn.querySelector('.close-icon');
+        let open = false;
+        function toggle() {
+            open = !open;
+            if (open) {
+                menu.classList.remove('translate-y-full');
+                overlay.classList.remove('hidden');
+                requestAnimationFrame(() => overlay.classList.replace('opacity-0', 'opacity-100'));
+                menuIcon.classList.add('opacity-0', 'rotate-90');
+                closeIcon.classList.remove('opacity-0', 'rotate-90');
+            } else {
+                menu.classList.add('translate-y-full');
+                overlay.classList.replace('opacity-100', 'opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                menuIcon.classList.remove('opacity-0', 'rotate-90');
+                closeIcon.classList.add('opacity-0', 'rotate-90');
+            }
+        }
+        btn.addEventListener('click', toggle);
+        overlay.addEventListener('click', toggle);
+        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { if (open) toggle(); }));
+    })();
+    </script>
+    <script src="src/js/site-config.js"></script>
+</body>
+</html>

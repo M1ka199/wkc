@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Kommunalwahl 2026 â€“ WKC</title>
+    <meta name="description" content="Kommunalwahl 2026 in Wulften: unsere Themen, Ideen und wie du dich aktiv einbringen kannst." />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { primary: "#7c3aed", "primary-dark": "#5b21b6", "bg-light": "#f8faf9" }, fontFamily: { sans: ["Public Sans", "system-ui", "sans-serif"] } } }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/css/style.css?v=2502191430" />
+
+    <style>
+        .vote-btn.voted { color: #5b21b6; }
+        .vote-btn.voted .vote-count { background:#7c3aed; color:#fff; }
+        .vote-btn.voted .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
+    </style>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Self-activation: vote buttons (localStorage)
+        (function () {
+            const STORE_KEY = 'wkc_topic_votes_2026';
+            const counts = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+            document.querySelectorAll('.vote-btn').forEach(btn => {
+                const topic = btn.dataset.topic;
+                const countEl = btn.querySelector('.vote-count');
+                const labelEl = btn.querySelector('.vote-label');
+                const voted = counts[topic + ':voted'] || false;
+                const total = counts[topic] || 0;
+                countEl.textContent = total;
+                if (voted) { btn.classList.add('voted'); labelEl.textContent = 'Vermerkt'; }
+                btn.addEventListener('click', () => {
+                    const isVoted = btn.classList.toggle('voted');
+                    const cur = counts[topic] || 0;
+                    counts[topic] = Math.max(0, cur + (isVoted ? 1 : -1));
+                    counts[topic + ':voted'] = isVoted;
+                    countEl.textContent = counts[topic];
+                    labelEl.textContent = isVoted ? 'Vermerkt' : 'Wichtig fÃ¼r mich';
+                    localStorage.setItem(STORE_KEY, JSON.stringify(counts));
+                    document.getElementById('vote-feedback').classList.remove('hidden');
+                });
+            });
+        })();
+        // Countdown
+        (function () {
+            const target = new Date('2026-09-13T08:00:00').getTime();
+            const days = document.getElementById('cd-days');
+            const hours = document.getElementById('cd-hours');
+            const mins = document.getElementById('cd-mins');
+            function tick() {
+                const diff = target - Date.now();
+                if (diff <= 0) { days.textContent = hours.textContent = mins.textContent = '0'; return; }
+                const d = Math.floor(diff / 86400000);
+                const h = Math.floor((diff % 86400000) / 3600000);
+                const m = Math.floor((diff % 3600000) / 60000);
+                days.textContent = d; hours.textContent = h; mins.textContent = m;
+            }
+            tick(); setInterval(tick, 60000);
+        })();
+        // Idee einreichen Ã¢â€ â€™ API contact.php (anonym)
+        (function () {
+            const form = document.getElementById('ideaForm');
+            const status = document.getElementById('ideaStatus');
+            if (!form) return;
+            form.addEventListener('submit', async e => {
+                e.preventDefault();
+                const name = document.getElementById('ideaName').value.trim();
+                const text = document.getElementById('ideaText').value.trim();
+                const privacy = document.getElementById('ideaPrivacy').checked;
+                if (!text || !privacy) return;
+                status.className = 'text-sm text-gray-500';
+                status.textContent = 'Wird gesendetâ€¦';
+                status.classList.remove('hidden');
+                try {
+                    const fd = new FormData();
+                    fd.append('type', 'contact');
+                    fd.append('anonymous', name ? '' : 'on');
+                    if (name) fd.append('name', name);
+                    fd.append('subject', 'Idee zur Kommunalwahl 2026');
+                    fd.append('message', text);
+                    fd.append('privacy', '1');
+                    const res = await fetch('api/contact.php', { method: 'POST', body: fd });
+                    if (res.ok) {
+                        status.className = 'text-sm text-primary font-semibold';
+                        status.textContent = 'Ã¢Å“â€œ Vielen Dank! Wir haben deine Idee erhalten.';
+                        form.reset();
+                    } else throw new Error();
+                } catch (err) {
+                    status.className = 'text-sm text-red-500';
+                    status.textContent = 'Senden fehlgeschlagen. Bitte spÃ¤ter erneut versuchen oder per E-Mail an info@zukunft-wulften.de.';
+                }
+            });
+        })();
+    });
+    </script>
+
+</head>
+<body class="bg-bg-light text-gray-800 antialiased font-sans">
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-md shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <a href="/" class="flex items-center group">
+                    <img src="src/wkc-logo.json" data-brand-logo="header" alt="WKC Logo" class="h-12" onerror="this.style.display='none'" />
+                </a>
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="/" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Startseite</a>
+                    <a href="neuigkeiten.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Neuigkeiten</a>
+                    <a href="themen.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Themen</a>
+                    <div class="relative group">
+                        <button class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all flex items-center gap-1">
+                            Kommunalwahlen
+                            <span class="material-symbols-outlined text-base transition-transform group-hover:rotate-180">expand_more</span>
+                        </button>
+                        <div class="absolute top-full right-0 pt-2 w-72 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-2">
+                                <a href="kommunalwahl-2026.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">how_to_vote</span>
+                                    <div><div class="font-bold text-sm text-gray-900">Kommunalwahl 2026</div><div class="text-xs text-gray-500 leading-tight">Unsere Themen fÃ¼r die kommende Wahl</div></div>
+                                </a>
+                                <a href="kommunalwahlen-2021.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">history</span>
+                                    <div><div class="font-bold text-sm text-gray-900">Kommunalwahl 2021</div><div class="text-xs text-gray-500 leading-tight">Wahlergebnis &amp; erreichte Ziele</div></div>
+                                </a>
+                                <a href="so-funktioniert-waehlen.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">school</span>
+                                    <div><div class="font-bold text-sm text-gray-900">So funktioniert WÃ¤hlen</div><div class="text-xs text-gray-500 leading-tight">ErstwÃ¤hler-Guide &amp; Briefwahl</div></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/#vorstand" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Vorstand</a>
+                    <a href="/#mitglied-werden" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Mitmachen</a>
+                    <a href="/#kontakt" class="ml-2 px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40">Kontakt</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===================== MOBILE MENU ===================== -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300 lg:hidden"></div>
+    <div id="mobile-menu" class="fixed bottom-0 left-0 right-0 z-[999] lg:hidden translate-y-full transition-transform duration-500 ease-out">
+        <div class="bg-white rounded-t-3xl shadow-2xl shadow-black/20 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-center pt-3 pb-2"><div class="w-12 h-1.5 bg-gray-300 rounded-full"></div></div>
+            <div class="px-6 pb-4">
+                <p class="text-xs font-bold text-primary uppercase tracking-widest mb-3">Navigation</p>
+                <img src="src/wkc-logo.json" data-brand-logo="header" alt="WKC Logo" class="h-10 mb-4" onerror="this.style.display='none'" />
+            </div>
+            <nav class="px-6 pb-8 space-y-1">
+                <a href="/" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">home</span><span class="font-semibold">Startseite</span></a>
+                <a href="neuigkeiten.html" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">newspaper</span><span class="font-semibold">Neuigkeiten</span></a>
+                <a href="themen.html" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">flag</span><span class="font-semibold">Themen</span></a>
+                <details class="group">
+                    <summary class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                        <span class="material-symbols-outlined text-primary/60">how_to_vote</span>
+                        <span class="font-semibold flex-1">Kommunalwahlen</span>
+                        <span class="material-symbols-outlined text-gray-400 transition-transform group-open:rotate-180">expand_more</span>
+                    </summary>
+                    <div class="ml-10 mt-1 space-y-1 mb-1">
+                        <a href="kommunalwahl-2026.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">Kommunalwahl 2026</a>
+                        <a href="kommunalwahlen-2021.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">Kommunalwahl 2021</a>
+                        <a href="so-funktioniert-waehlen.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">So funktioniert WÃ¤hlen</a>
+                    </div>
+                </details>
+                <a href="/#vorstand" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">groups</span><span class="font-semibold">Vorstand</span></a>
+                <a href="/#mitglied-werden" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">group_add</span><span class="font-semibold">Mitmachen</span></a>
+                <a href="/#kontakt" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">mail</span><span class="font-semibold">Kontakt</span></a>
+            </nav>
+            <div class="px-6 pb-8 pt-4 border-t border-gray-100">
+                <div class="flex gap-4 text-xs text-gray-400">
+                    <a href="impressum.html" class="hover:text-primary transition-colors">Impressum</a>
+                    <a href="datenschutz.html" class="hover:text-primary transition-colors">Datenschutz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="mobile-menu-btn" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[1000] lg:hidden w-14 h-14 bg-primary text-white rounded-full shadow-xl shadow-primary/30 flex items-center justify-center hover:bg-primary-dark transition-all active:scale-95">
+        <span class="material-symbols-outlined text-2xl menu-icon transition-transform duration-300">menu</span>
+        <span class="material-symbols-outlined text-2xl close-icon absolute transition-transform duration-300 opacity-0 rotate-90">close</span>
+    </button>
+
+    
+    <!-- ===================== HERO ===================== -->
+    <header class="pt-20 bg-gradient-to-br from-primary to-primary-dark relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 right-1/3 w-72 h-72 bg-white rounded-full blur-3xl"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10">
+            <nav class="text-sm text-white/60 mb-6">
+                <a href="/" class="hover:text-white transition-colors">Startseite</a>
+                <span class="mx-2">/</span>
+                <span>Kommunalwahlen</span>
+                <span class="mx-2">/</span>
+                <span class="text-white font-medium">Wahl 2026</span>
+            </nav>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-10 items-center">
+                <div class="md:col-span-3">
+                    <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-md text-white text-sm font-semibold mb-6 border border-white/20">
+                        <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                        Vorbereitung &middot; Wahltag voraussichtlich September 2026
+                    </span>
+                    <h1 class="text-3xl md:text-5xl font-black text-white mb-4 leading-tight">Kommunalwahl 2026<br><span class="text-white/80">Mach Wulften zu deiner Sache.</span></h1>
+                    <p class="text-lg text-white/80 leading-relaxed mb-8">
+                        Die WKC tritt 2026 erneut an â€“ mit klaren Schwerpunkten fÃ¼r eine zukunftsfÃ¤hige Gemeinde.
+                        Hier erfÃ¤hrst du, wofÃ¼r wir stehen, und wie du dich einbringen kannst.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="#themen-2026" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-primary font-bold rounded-full hover:bg-gray-100 transition-all">
+                            <span class="material-symbols-outlined text-lg">arrow_downward</span>
+                            Themen erkunden
+                        </a>
+                        <a href="so-funktioniert-waehlen.html" class="inline-flex items-center gap-2 px-5 py-2.5 border-2 border-white/50 text-white font-bold rounded-full hover:bg-white/10 transition-all">
+                            <span class="material-symbols-outlined text-lg">help</span>
+                            So funktioniert WÃ¤hlen
+                        </a>
+                    </div>
+                </div>
+                <div class="md:col-span-2">
+                    <!-- Countdown Card -->
+                    <div id="countdown-card" class="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-6">
+                        <p class="text-white/60 text-xs font-bold tracking-widest uppercase mb-4">Bis zum Wahltag</p>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="bg-white/10 rounded-2xl p-3 text-center">
+                                <div id="cd-days" class="text-3xl md:text-4xl font-black text-white">â€”</div>
+                                <p class="text-xs text-white/60 mt-1">Tage</p>
+                            </div>
+                            <div class="bg-white/10 rounded-2xl p-3 text-center">
+                                <div id="cd-hours" class="text-3xl md:text-4xl font-black text-white">â€”</div>
+                                <p class="text-xs text-white/60 mt-1">Stunden</p>
+                            </div>
+                            <div class="bg-white/10 rounded-2xl p-3 text-center">
+                                <div id="cd-mins" class="text-3xl md:text-4xl font-black text-white">â€”</div>
+                                <p class="text-xs text-white/60 mt-1">Minuten</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-white/50 mt-4 italic">Geplanter Termin: 13. September 2026 (vorlÃ¤ufig).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-24">
+        <!-- ===================== THEMEN 2026 ===================== -->
+        <section id="themen-2026">
+            <div class="text-center mb-12">
+                <span class="text-primary font-bold text-sm tracking-[0.2em] uppercase">Was uns 2026 wichtig ist</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-3">Unsere Themen fÃ¼r die kommende Wahlperiode</h2>
+                <div class="w-16 h-1 bg-primary rounded-full mx-auto mt-4"></div>
+                <p class="mt-4 text-gray-500 max-w-2xl mx-auto">Klick dich durch unsere Schwerpunkte â€“ und sag uns direkt, was dir wichtig ist.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Theme card with self-activation -->
+                <article class="theme-card group bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><span class="material-symbols-outlined">eco</span></div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Klima &amp; Energie</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-5">Mehr Photovoltaik auf Ã¶ffentlichen GebÃ¤uden, QuartiersÂ­lÃ¶sungen fÃ¼r Speicher &amp; WÃ¤rme, naturnahe GrÃ¼nflÃ¤chen.</p>
+                    <button class="vote-btn flex items-center gap-2 text-sm font-bold text-primary hover:text-primary-dark transition-colors" data-topic="klima-energie">
+                        <span class="material-symbols-outlined text-base">thumb_up</span>
+                        <span class="vote-label">Wichtig fÃ¼r mich</span>
+                        <span class="vote-count ml-2 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs">0</span>
+                    </button>
+                </article>
+
+                <article class="theme-card group bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><span class="material-symbols-outlined">family_restroom</span></div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Familie &amp; Generationen</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-5">SpielplÃ¤tze, Kita-PlÃ¤tze, generationsÃ¼bergreifende Treffpunkte: Wulften fÃ¼r jedes Alter lebenswert halten.</p>
+                    <button class="vote-btn flex items-center gap-2 text-sm font-bold text-primary hover:text-primary-dark transition-colors" data-topic="familie">
+                        <span class="material-symbols-outlined text-base">thumb_up</span>
+                        <span class="vote-label">Wichtig fÃ¼r mich</span>
+                        <span class="vote-count ml-2 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs">0</span>
+                    </button>
+                </article>
+
+                <article class="theme-card group bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><span class="material-symbols-outlined">directions_bus</span></div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">MobilitÃ¤t im Dorf</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-5">Bessere Ã–PNV-Anbindung, sichere Geh- und Radwege, Mitfahrkonzepte â€“ damit Wulften nicht abgehÃ¤ngt wird.</p>
+                    <button class="vote-btn flex items-center gap-2 text-sm font-bold text-primary hover:text-primary-dark transition-colors" data-topic="mobilitaet">
+                        <span class="material-symbols-outlined text-base">thumb_up</span>
+                        <span class="vote-label">Wichtig fÃ¼r mich</span>
+                        <span class="vote-count ml-2 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs">0</span>
+                    </button>
+                </article>
+
+                <article class="theme-card group bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><span class="material-symbols-outlined">storefront</span></div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Lebendiger Ortskern</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-5">Treffpunkte stÃ¤rken, lokales Gewerbe unterstÃ¼tzen, Leerstand vermeiden â€“ Wulften soll mehr sein als nur Wohnort.</p>
+                    <button class="vote-btn flex items-center gap-2 text-sm font-bold text-primary hover:text-primary-dark transition-colors" data-topic="ortskern">
+                        <span class="material-symbols-outlined text-base">thumb_up</span>
+                        <span class="vote-label">Wichtig fÃ¼r mich</span>
+                        <span class="vote-count ml-2 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs">0</span>
+                    </button>
+                </article>
+
+                <article class="theme-card group bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><span class="material-symbols-outlined">forum</span></div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">BÃ¼rgerÂ­beteiligung &amp; Transparenz</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-5">BÃ¼rgerwerkstÃ¤tten, offene Informationen, anonymer Draht zum Vorstand â€“ Politik vor Ort soll ansprechbar sein.</p>
+                    <button class="vote-btn flex items-center gap-2 text-sm font-bold text-primary hover:text-primary-dark transition-colors" data-topic="beteiligung">
+                        <span class="material-symbols-outlined text-base">thumb_up</span>
+                        <span class="vote-label">Wichtig fÃ¼r mich</span>
+                        <span class="vote-count ml-2 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs">0</span>
+                    </button>
+                </article>
+
+                <article class="theme-card group bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                    <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"><span class="material-symbols-outlined">volunteer_activism</span></div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Vereine &amp; Ehrenamt</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed mb-5">Wulftens Herzschlag schlÃ¤gt im Ehrenamt. Wir wollen Vereine weiterhin aktiv unterstÃ¼tzen â€“ finanziell und ideell.</p>
+                    <button class="vote-btn flex items-center gap-2 text-sm font-bold text-primary hover:text-primary-dark transition-colors" data-topic="vereine">
+                        <span class="material-symbols-outlined text-base">thumb_up</span>
+                        <span class="vote-label">Wichtig fÃ¼r mich</span>
+                        <span class="vote-count ml-2 px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs">0</span>
+                    </button>
+                </article>
+            </div>
+
+            <p id="vote-feedback" class="text-center text-sm text-gray-400 mt-8 italic hidden">Danke fÃ¼r deine Stimme â€“ sie hilft uns einzuschÃ¤tzen, was Wulften bewegt.</p>
+        </section>
+
+        <!-- ===================== INTERAKTIVES "WAS BEWEGT DICH" ===================== -->
+        <section class="bg-bg-section -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-16 md:py-20 rounded-3xl">
+            <div class="max-w-3xl mx-auto text-center">
+                <span class="text-primary font-bold text-sm tracking-[0.2em] uppercase">Mach mit</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-3 mb-4">Was bewegt dich in Wulften?</h2>
+                <div class="w-16 h-1 bg-primary rounded-full mx-auto mb-6"></div>
+                <p class="text-gray-600 mb-8 leading-relaxed">Du musst kein Mitglied sein, um deine Idee einzubringen. Anonym oder persÃ¶nlich â€“ wir lesen jede Nachricht.</p>
+                <form id="ideaForm" class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8 text-left space-y-5">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2" for="ideaName">Dein Name (optional)</label>
+                        <input type="text" id="ideaName" class="w-full rounded-xl border-gray-200 focus:border-primary focus:ring-primary" placeholder="z. B. Anna aus Wulften" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2" for="ideaText">Deine Idee, dein Anliegen, deine Sorge</label>
+                        <textarea id="ideaText" rows="5" class="w-full rounded-xl border-gray-200 focus:border-primary focus:ring-primary" placeholder="Was sollte unbedingt auf die Tagesordnung 2026?" required></textarea>
+                    </div>
+                    <label class="flex items-start gap-3 text-sm text-gray-600">
+                        <input type="checkbox" id="ideaPrivacy" class="rounded text-primary focus:ring-primary mt-0.5" required />
+                        <span>Ich habe die <a href="datenschutz.html" class="text-primary underline">DatenschutzerklÃ¤rung</a> gelesen und bin mit der Verarbeitung meiner Angaben zur Bearbeitung meines Anliegens einverstanden.</span>
+                    </label>
+                    <button type="submit" class="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 bg-primary text-white font-bold rounded-full hover:bg-primary-dark transition-all">
+                        <span class="material-symbols-outlined text-lg">send</span>
+                        Idee einreichen
+                    </button>
+                    <p id="ideaStatus" class="text-sm hidden"></p>
+                </form>
+            </div>
+        </section>
+
+        <!-- ===================== CTAs ===================== -->
+        <section>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <a href="/#mitglied-werden" class="group bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                    <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform"><span class="material-symbols-outlined text-3xl">group_add</span></div>
+                    <h3 class="font-extrabold text-lg text-gray-900 mb-2">Mitglied werden</h3>
+                    <p class="text-gray-500 text-sm">Werde Teil der WÃ¤hlergruppe â€“ ohne Parteibuch, mit Stimme.</p>
+                </a>
+                <a href="/#kontakt" class="group bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                    <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform"><span class="material-symbols-outlined text-3xl">mail</span></div>
+                    <h3 class="font-extrabold text-lg text-gray-900 mb-2">Kontakt aufnehmen</h3>
+                    <p class="text-gray-500 text-sm">Direkt mit dem Vorstand sprechen â€“ auch anonym mÃ¶glich.</p>
+                </a>
+                <a href="so-funktioniert-waehlen.html" class="group bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center hover:shadow-lg hover:-translate-y-0.5 transition-all">
+                    <div class="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform"><span class="material-symbols-outlined text-3xl">school</span></div>
+                    <h3 class="font-extrabold text-lg text-gray-900 mb-2">So funktioniert WÃ¤hlen</h3>
+                    <p class="text-gray-500 text-sm">ErstwÃ¤hler-Guide: alles zur Stimmabgabe in fÃ¼nf Minuten.</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 text-white pt-16 pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-6">
+                        <img src="src/wkc-logo.json" data-brand-logo="footer" alt="WKC Logo" class="h-10" onerror="this.style.display='none'" />
+                    </div>
+                    <p class="text-gray-400 max-w-sm leading-relaxed text-sm">
+                        Die WKC ist eine parteiunabhÃ¤ngige Vereinigung engagierter BÃ¼rgerinnen und BÃ¼rger,
+                        die sich fÃ¼r die positive Entwicklung unserer Heimat einsetzt.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Navigation</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="/" class="text-gray-400 hover:text-primary transition-colors">Startseite</a></li>
+                        <li><a href="neuigkeiten.html" class="text-gray-400 hover:text-primary transition-colors">Neuigkeiten</a></li>
+                        <li><a href="/#vorstand" class="text-gray-400 hover:text-primary transition-colors">Vorstand</a></li>
+                        <li><a href="themen.html" class="text-gray-400 hover:text-primary transition-colors">Themen & Ziele</a></li>
+                        <li><a href="/#kontakt" class="text-gray-400 hover:text-primary transition-colors">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Rechtliches</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="impressum.html" class="text-gray-400 hover:text-primary transition-colors">Impressum</a></li>
+                        <li><a href="datenschutz.html" class="text-gray-400 hover:text-primary transition-colors">Datenschutz</a></li>
+                    </ul>
+                    <div class="mt-6">
+                        <h4 class="font-bold mb-3 text-sm uppercase tracking-widest text-gray-400">Kontakt</h4>
+                        <div class="flex items-center gap-2 text-sm text-gray-400">
+                            <span class="material-symbols-outlined text-primary text-base">mail</span>
+                            info@zukunft-wulften.de
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2021 â€“ 2026 WKC. Alle Rechte vorbehalten.</p>
+                <div class="flex items-center gap-4 mt-3 md:mt-0">
+                    <span>Gemeinsam fÃ¼r unsere Heimat.</span>
+                    <a href="admin/" class="hover:text-primary transition-colors">Login</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+    (function initMobileMenu() {
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('mobile-menu-overlay');
+        if (!btn || !menu || !overlay) return;
+        const menuIcon = btn.querySelector('.menu-icon');
+        const closeIcon = btn.querySelector('.close-icon');
+        let open = false;
+        function toggle() {
+            open = !open;
+            if (open) {
+                menu.classList.remove('translate-y-full');
+                overlay.classList.remove('hidden');
+                requestAnimationFrame(() => overlay.classList.replace('opacity-0', 'opacity-100'));
+                menuIcon.classList.add('opacity-0', 'rotate-90');
+                closeIcon.classList.remove('opacity-0', 'rotate-90');
+            } else {
+                menu.classList.add('translate-y-full');
+                overlay.classList.replace('opacity-100', 'opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                menuIcon.classList.remove('opacity-0', 'rotate-90');
+                closeIcon.classList.add('opacity-0', 'rotate-90');
+            }
+        }
+        btn.addEventListener('click', toggle);
+        overlay.addEventListener('click', toggle);
+        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { if (open) toggle(); }));
+    })();
+    </script>
+    <script src="src/js/site-config.js"></script>
+</body>
+</html>
+

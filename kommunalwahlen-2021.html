@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Kommunalwahl 2021 â€“ RÃ¼ckblick â€“ WKC</title>
+    <meta name="description" content="RÃ¼ckblick auf die Kommunalwahl 2021 in Wulften: Wahlergebnis, erreichte Ziele und unser damaliges Wahlprogramm." />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { primary: "#7c3aed", "primary-dark": "#5b21b6", "bg-light": "#f8faf9" }, fontFamily: { sans: ["Public Sans", "system-ui", "sans-serif"] } } }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="src/css/style.css?v=2502191430" />
+
+</head>
+<body class="bg-bg-light text-gray-800 antialiased font-sans">
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-md shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <a href="/" class="flex items-center group">
+                    <img src="src/wkc-logo.json" data-brand-logo="header" alt="WKC Logo" class="h-12" onerror="this.style.display='none'" />
+                </a>
+                <div class="hidden lg:flex items-center gap-1">
+                    <a href="/" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Startseite</a>
+                    <a href="neuigkeiten.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Neuigkeiten</a>
+                    <a href="themen.html" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Themen</a>
+                    <div class="relative group">
+                        <button class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all flex items-center gap-1">
+                            Kommunalwahlen
+                            <span class="material-symbols-outlined text-base transition-transform group-hover:rotate-180">expand_more</span>
+                        </button>
+                        <div class="absolute top-full right-0 pt-2 w-72 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-2">
+                                <a href="kommunalwahl-2026.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">how_to_vote</span>
+                                    <div><div class="font-bold text-sm text-gray-900">Kommunalwahl 2026</div><div class="text-xs text-gray-500 leading-tight">Unsere Themen fÃ¼r die kommende Wahl</div></div>
+                                </a>
+                                <a href="kommunalwahlen-2021.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">history</span>
+                                    <div><div class="font-bold text-sm text-gray-900">Kommunalwahl 2021</div><div class="text-xs text-gray-500 leading-tight">Wahlergebnis &amp; erreichte Ziele</div></div>
+                                </a>
+                                <a href="so-funktioniert-waehlen.html" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">
+                                    <span class="material-symbols-outlined text-primary mt-0.5">school</span>
+                                    <div><div class="font-bold text-sm text-gray-900">So funktioniert WÃ¤hlen</div><div class="text-xs text-gray-500 leading-tight">ErstwÃ¤hler-Guide &amp; Briefwahl</div></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/#vorstand" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Vorstand</a>
+                    <a href="/#mitglied-werden" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 transition-all">Mitmachen</a>
+                    <a href="/#kontakt" class="ml-2 px-6 py-2.5 bg-primary hover:bg-primary-dark text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-primary/20 hover:shadow-primary/40">Kontakt</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===================== MOBILE MENU ===================== -->
+    <div id="mobile-menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300 lg:hidden"></div>
+    <div id="mobile-menu" class="fixed bottom-0 left-0 right-0 z-[999] lg:hidden translate-y-full transition-transform duration-500 ease-out">
+        <div class="bg-white rounded-t-3xl shadow-2xl shadow-black/20 max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-center pt-3 pb-2"><div class="w-12 h-1.5 bg-gray-300 rounded-full"></div></div>
+            <div class="px-6 pb-4">
+                <p class="text-xs font-bold text-primary uppercase tracking-widest mb-3">Navigation</p>
+                <img src="src/wkc-logo.json" data-brand-logo="header" alt="WKC Logo" class="h-10 mb-4" onerror="this.style.display='none'" />
+            </div>
+            <nav class="px-6 pb-8 space-y-1">
+                <a href="/" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">home</span><span class="font-semibold">Startseite</span></a>
+                <a href="neuigkeiten.html" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">newspaper</span><span class="font-semibold">Neuigkeiten</span></a>
+                <a href="themen.html" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">flag</span><span class="font-semibold">Themen</span></a>
+                <details class="group">
+                    <summary class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                        <span class="material-symbols-outlined text-primary/60">how_to_vote</span>
+                        <span class="font-semibold flex-1">Kommunalwahlen</span>
+                        <span class="material-symbols-outlined text-gray-400 transition-transform group-open:rotate-180">expand_more</span>
+                    </summary>
+                    <div class="ml-10 mt-1 space-y-1 mb-1">
+                        <a href="kommunalwahl-2026.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">Kommunalwahl 2026</a>
+                        <a href="kommunalwahlen-2021.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">Kommunalwahl 2021</a>
+                        <a href="so-funktioniert-waehlen.html" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">So funktioniert WÃ¤hlen</a>
+                    </div>
+                </details>
+                <a href="/#vorstand" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">groups</span><span class="font-semibold">Vorstand</span></a>
+                <a href="/#mitglied-werden" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">group_add</span><span class="font-semibold">Mitmachen</span></a>
+                <a href="/#kontakt" class="mobile-nav-link flex items-center gap-4 px-4 py-3.5 rounded-xl text-gray-700 hover:bg-primary/5 hover:text-primary transition-all"><span class="material-symbols-outlined text-primary/60">mail</span><span class="font-semibold">Kontakt</span></a>
+            </nav>
+            <div class="px-6 pb-8 pt-4 border-t border-gray-100">
+                <div class="flex gap-4 text-xs text-gray-400">
+                    <a href="impressum.html" class="hover:text-primary transition-colors">Impressum</a>
+                    <a href="datenschutz.html" class="hover:text-primary transition-colors">Datenschutz</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button id="mobile-menu-btn" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[1000] lg:hidden w-14 h-14 bg-primary text-white rounded-full shadow-xl shadow-primary/30 flex items-center justify-center hover:bg-primary-dark transition-all active:scale-95">
+        <span class="material-symbols-outlined text-2xl menu-icon transition-transform duration-300">menu</span>
+        <span class="material-symbols-outlined text-2xl close-icon absolute transition-transform duration-300 opacity-0 rotate-90">close</span>
+    </button>
+
+    
+    <!-- ===================== HERO ===================== -->
+    <header class="pt-20 bg-gradient-to-br from-primary to-primary-dark relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 right-1/4 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10">
+            <nav class="text-sm text-white/60 mb-6">
+                <a href="/" class="hover:text-white transition-colors">Startseite</a>
+                <span class="mx-2">/</span>
+                <span>Kommunalwahlen</span>
+                <span class="mx-2">/</span>
+                <span class="text-white font-medium">Kommunalwahl 2021</span>
+            </nav>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                <div>
+                    <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 backdrop-blur-md text-white text-sm font-semibold mb-6 border border-white/20">
+                        <span class="material-symbols-outlined text-base">history</span>
+                        RÃ¼ckblick &middot; September 2021
+                    </span>
+                    <h1 class="text-3xl md:text-5xl font-black text-white mb-4 leading-tight">Kommunalwahl 2021<br><span class="text-white/80">Wir haben Wort gehalten.</span></h1>
+                    <p class="text-lg text-white/80 leading-relaxed">
+                        Bei der Kommunalwahl 2021 hat die WKC <strong class="text-white">36,4 %</strong> der Stimmen erhalten und ist seitdem mit drei Sitzen im Wulftener Gemeinderat vertreten.
+                        Heute, fÃ¼nf Jahre spÃ¤ter, ziehen wir Bilanz: Was haben wir aus unseren damaligen Wahlversprechen gemacht?
+                    </p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 p-6">
+                    <p class="text-white/60 text-xs font-bold tracking-widest uppercase mb-4">Wahlergebnis Gemeinderat Wulften 2021</p>
+                    <!-- Animated bar chart -->
+                    <div id="result-chart-2021" class="space-y-5">
+                        <div class="result-row" data-pct="36.4">
+                            <div class="flex items-baseline justify-between mb-1.5">
+                                <span class="font-bold text-white inline-flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full" style="background:#1aa0f9"></span>WKC</span>
+                                <span class="text-white text-2xl font-black">36,4&nbsp;%</span>
+                            </div>
+                            <div class="h-3 bg-white/10 rounded-full overflow-hidden">
+                                <div class="result-bar h-full rounded-full" style="background:#1aa0f9; width:0%; transition:width 1.4s cubic-bezier(.22,.61,.36,1)"></div>
+                            </div>
+                            <p class="text-xs text-white/60 mt-1">3 von 8 Sitzen &middot; WKC</p>
+                        </div>
+                        <div class="result-row" data-pct="36.4">
+                            <div class="flex items-baseline justify-between mb-1.5">
+                                <span class="font-bold text-white inline-flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full" style="background:#b01313"></span>SPD</span>
+                                <span class="text-white text-2xl font-black">36,4&nbsp;%</span>
+                            </div>
+                            <div class="h-3 bg-white/10 rounded-full overflow-hidden">
+                                <div class="result-bar h-full rounded-full" style="background:#b01313; width:0%; transition:width 1.4s cubic-bezier(.22,.61,.36,1) .15s"></div>
+                            </div>
+                            <p class="text-xs text-white/60 mt-1">3 von 8 Sitzen &middot; Sozialdemokraten</p>
+                        </div>
+                        <div class="result-row" data-pct="27.2">
+                            <div class="flex items-baseline justify-between mb-1.5">
+                                <span class="font-bold text-white inline-flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full" style="background:#111827"></span>CDU</span>
+                                <span class="text-white text-2xl font-black">27,2&nbsp;%</span>
+                            </div>
+                            <div class="h-3 bg-white/10 rounded-full overflow-hidden">
+                                <div class="result-bar h-full rounded-full" style="background:#111827; width:0%; transition:width 1.4s cubic-bezier(.22,.61,.36,1) .3s"></div>
+                            </div>
+                            <p class="text-xs text-white/60 mt-1">2 von 8 Sitzen &middot; Christdemokraten</p>
+                        </div>
+                    </div>
+                    <p class="text-xs text-white/50 mt-5 italic">Wahlperiode: 01.11.2021 â€“ 31.10.2026 &middot; Werte gerundet (Bezugswert: 100 % = stÃ¤rkste Liste)</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-24">
+        <!-- ===================== ERREICHTE ZIELE ===================== -->
+        <section>
+            <div class="text-center mb-12">
+                <span class="text-primary font-bold text-sm tracking-[0.2em] uppercase">Bilanz 2021â€“2026</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-3">Das haben wir erreicht</h2>
+                <div class="w-16 h-1 bg-primary rounded-full mx-auto mt-4"></div>
+                <p class="mt-4 text-gray-500 max-w-2xl mx-auto">Aus Versprechen wurden Taten. Hier ein Ãœberblick Ã¼ber zentrale Erfolge der vergangenen Wahlperiode.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined">euro</span></div>
+                        <span class="ml-auto px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">Erreicht</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Abschaffung der StraÃŸenausbaubeitrÃ¤ge</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Eines unserer Kernanliegen 2021: keine ungerechte Belastung mehr fÃ¼r Anwohner durch STRABS. In Niedersachsen ist die Abschaffung politisch durchgesetzt.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined">solar_power</span></div>
+                        <span class="ml-auto px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">Aktiv</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Ausbau regenerativer Energien</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Unser â€ž1.000-DÃ¤cher-Programm" hat den AnstoÃŸ gegeben: Photovoltaik wurde zum Alltagsthema in Wulften â€“ auf privaten wie Ã¶ffentlichen GebÃ¤uden.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined">wifi</span></div>
+                        <span class="ml-auto px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">Erreicht</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Glasfaser-Breitbandausbau</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Schnelles Internet fÃ¼r alle Haushalte â€“ damit Homeoffice, Bildung und digitale Teilhabe in Wulften nicht lÃ¤nger eine Frage des Wohnorts sind.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined">volunteer_activism</span></div>
+                        <span class="ml-auto px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">Laufend</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">FÃ¶rderung von Vereinen &amp; Initiativen</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Ãœber die WKC haben wir mehrere lokale Projekte und Vereine finanziell unterstÃ¼tzt â€“ siehe â€žDas haben wir gefÃ¶rdert" auf der Startseite.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined">hiking</span></div>
+                        <span class="ml-auto px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">Aktiv</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Aufwertung der Naherholung</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Wanderwege, SpielplÃ¤tze und Treffpunkte â€“ fÃ¼r ein lebenswertes Dorf, in dem sich alle Generationen wohlfÃ¼hlen.</p>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-all">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center"><span class="material-symbols-outlined">forum</span></div>
+                        <span class="ml-auto px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold">Laufend</span>
+                    </div>
+                    <h3 class="font-bold text-lg text-gray-900 mb-2">Mehr BÃ¼rgerbeteiligung &amp; Transparenz</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Direkter Draht zum Vorstand, anonyme Nachrichtenfunktion, regelmÃ¤ÃŸige Berichte â€“ Politik vor Ort soll ansprechbar bleiben.</p>
+                </div>
+            </div>
+            <div class="text-center mt-10">
+                <a href="themen.html" class="inline-flex items-center gap-2 px-6 py-3 border-2 border-primary text-primary font-bold rounded-full hover:bg-primary hover:text-white transition-all">
+                    Alle Themen &amp; Ziele ansehen
+                    <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- ===================== WAHLTHEMEN 2021 (ACCORDION) ===================== -->
+        <section class="bg-bg-section -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-16 md:py-20 rounded-3xl">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-12">
+                    <span class="text-primary font-bold text-sm tracking-[0.2em] uppercase">Unser Wahlprogramm 2021</span>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-3">Die Themen von damals</h2>
+                    <div class="w-16 h-1 bg-primary rounded-full mx-auto mt-4"></div>
+                    <p class="mt-4 text-gray-500 max-w-2xl mx-auto">Mit diesen drei Schwerpunkten sind wir 2021 angetreten â€“ sie sind bis heute MaÃŸstab unserer Arbeit.</p>
+                </div>
+                <div class="space-y-3">
+                    <details class="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden" open>
+                        <summary class="flex items-center gap-4 p-6 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                            <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined">construction</span></div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg text-gray-900">1. StraÃŸenausbaubeitrÃ¤ge abschaffen</h3>
+                                <p class="text-sm text-gray-500">STRABS â€“ ungerecht, undurchsichtig, abzuschaffen.</p>
+                            </div>
+                            <span class="material-symbols-outlined text-gray-400 transition-transform group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed border-t border-gray-100 pt-5 space-y-3">
+                            <p>Wer in Wulften wohnt, soll nicht plÃ¶tzlich mit fÃ¼nfstelligen SonderbeitrÃ¤gen fÃ¼r StraÃŸenarbeiten konfrontiert werden, an denen er gar keine direkte Schuld hat. Wir haben 2021 klar Position gegen die StraÃŸenausbaubeitrÃ¤ge bezogen â€“ und unterstÃ¼tzen weiterhin alle Anstrengungen, die diesen unsozialen Posten dauerhaft aus der kommunalen RealitÃ¤t entfernen.</p>
+                            <p>Unser Ziel bleibt: faire, planbare Finanzierung von Infrastruktur ohne HÃ¤rtefÃ¤lle fÃ¼r Anwohner.</p>
+                        </div>
+                    </details>
+                    <details class="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <summary class="flex items-center gap-4 p-6 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                            <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined">solar_power</span></div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg text-gray-900">2. Ausbau regenerativer Energien</h3>
+                                <p class="text-sm text-gray-500">Unser â€ž1.000-DÃ¤cher-Programm".</p>
+                            </div>
+                            <span class="material-symbols-outlined text-gray-400 transition-transform group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed border-t border-gray-100 pt-5 space-y-3">
+                            <p>Wir wollten erreichen, dass mÃ¶glichst viele DÃ¤cher in Wulften zur Stromproduktion genutzt werden. Mit AufklÃ¤rung, Beratung und gezielter FÃ¶rderung sind heute Photovoltaikanlagen ein selbstverstÃ¤ndlicher Anblick im Ortsbild â€“ ein konkreter Beitrag zur Energiewende vor Ort.</p>
+                            <p>Auch Ã¶ffentliche GebÃ¤ude und Vereinsanlagen mÃ¼ssen weiter mitgedacht werden â€“ fÃ¼r die Wahl 2026 erweitern wir dieses Thema (siehe <a href="kommunalwahl-2026.html" class="text-primary underline font-medium">Wahl 2026</a>).</p>
+                        </div>
+                    </details>
+                    <details class="group bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                        <summary class="flex items-center gap-4 p-6 cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                            <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined">router</span></div>
+                            <div class="flex-1">
+                                <h3 class="font-bold text-lg text-gray-900">3. Schnelles Internet fÃ¼r Wulften</h3>
+                                <p class="text-sm text-gray-500">Glasfaser-Breitbandausbau fÃ¼r alle Haushalte.</p>
+                            </div>
+                            <span class="material-symbols-outlined text-gray-400 transition-transform group-open:rotate-180">expand_more</span>
+                        </summary>
+                        <div class="px-6 pb-6 text-gray-600 leading-relaxed border-t border-gray-100 pt-5 space-y-3">
+                            <p>Homeoffice, Schule, Streaming, digitale BehÃ¶rdengÃ¤nge: Modernes Leben braucht stabiles, schnelles Internet. Wir haben uns entschieden fÃ¼r den Glasfaser-Ausbau in Wulften eingesetzt â€“ heute ist die Versorgung deutlich besser als zu Beginn der Wahlperiode.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================== ORIGINAL MINDMAP ===================== -->
+        <section>
+            <div class="text-center mb-10">
+                <span class="text-primary font-bold text-sm tracking-[0.2em] uppercase">Visualisiert</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-3">Unsere Themen-Mindmap (2021)</h2>
+                <div class="w-16 h-1 bg-primary rounded-full mx-auto mt-4"></div>
+                <p class="mt-4 text-gray-500 max-w-2xl mx-auto">So haben wir damals unsere Schwerpunkte fÃ¼r Wulften visualisiert â€“ mit ihren Verzweigungen in Alltagsthemen.</p>
+            </div>
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-10">
+                <img src="src/img/wkc-mindmap.svg" alt="WKC Themen-Mindmap 2021" class="w-full h-auto" loading="lazy" />
+            </div>
+        </section>
+
+        <!-- ===================== CTA ===================== -->
+        <section class="bg-gradient-to-br from-primary to-primary-dark rounded-3xl p-10 md:p-14 text-center text-white relative overflow-hidden">
+            <div class="absolute inset-0 opacity-10">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+            </div>
+            <div class="relative z-10 max-w-2xl mx-auto">
+                <span class="material-symbols-outlined text-5xl mb-4">how_to_vote</span>
+                <h2 class="text-2xl md:text-3xl font-extrabold mb-4">2026 entscheiden Sie wieder.</h2>
+                <p class="text-white/80 mb-8 leading-relaxed">Die nÃ¤chste Kommunalwahl steht im September 2026 an. Lernen Sie unsere Themen fÃ¼r die kommende Wahlperiode kennen â€“ oder bringen Sie sich direkt ein.</p>
+                <div class="flex flex-wrap items-center justify-center gap-4">
+                    <a href="kommunalwahl-2026.html" class="inline-flex items-center gap-2 px-6 py-3 bg-white text-primary font-bold rounded-full hover:bg-gray-100 transition-all">
+                        <span class="material-symbols-outlined text-lg">campaign</span>
+                        Themen 2026 ansehen
+                    </a>
+                    <a href="/#mitglied-werden" class="inline-flex items-center gap-2 px-6 py-3 border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-primary transition-all">
+                        <span class="material-symbols-outlined text-lg">group_add</span>
+                        Mitmachen
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900 text-white pt-16 pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="md:col-span-2">
+                    <div class="flex items-center mb-6">
+                        <img src="src/wkc-logo.json" data-brand-logo="footer" alt="WKC Logo" class="h-10" onerror="this.style.display='none'" />
+                    </div>
+                    <p class="text-gray-400 max-w-sm leading-relaxed text-sm">
+                        Die WKC ist eine parteiunabhÃ¤ngige Vereinigung engagierter BÃ¼rgerinnen und BÃ¼rger,
+                        die sich fÃ¼r die positive Entwicklung unserer Heimat einsetzt.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Navigation</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="/" class="text-gray-400 hover:text-primary transition-colors">Startseite</a></li>
+                        <li><a href="neuigkeiten.html" class="text-gray-400 hover:text-primary transition-colors">Neuigkeiten</a></li>
+                        <li><a href="/#vorstand" class="text-gray-400 hover:text-primary transition-colors">Vorstand</a></li>
+                        <li><a href="themen.html" class="text-gray-400 hover:text-primary transition-colors">Themen & Ziele</a></li>
+                        <li><a href="/#kontakt" class="text-gray-400 hover:text-primary transition-colors">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6 text-sm uppercase tracking-widest text-gray-400">Rechtliches</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="impressum.html" class="text-gray-400 hover:text-primary transition-colors">Impressum</a></li>
+                        <li><a href="datenschutz.html" class="text-gray-400 hover:text-primary transition-colors">Datenschutz</a></li>
+                    </ul>
+                    <div class="mt-6">
+                        <h4 class="font-bold mb-3 text-sm uppercase tracking-widest text-gray-400">Kontakt</h4>
+                        <div class="flex items-center gap-2 text-sm text-gray-400">
+                            <span class="material-symbols-outlined text-primary text-base">mail</span>
+                            info@zukunft-wulften.de
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">
+                <p>&copy; 2021 â€“ 2026 WKC. Alle Rechte vorbehalten.</p>
+                <div class="flex items-center gap-4 mt-3 md:mt-0">
+                    <span>Gemeinsam fÃ¼r unsere Heimat.</span>
+                    <a href="admin/" class="hover:text-primary transition-colors">Login</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+    (function initMobileMenu() {
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('mobile-menu-overlay');
+        if (!btn || !menu || !overlay) return;
+        const menuIcon = btn.querySelector('.menu-icon');
+        const closeIcon = btn.querySelector('.close-icon');
+        let open = false;
+        function toggle() {
+            open = !open;
+            if (open) {
+                menu.classList.remove('translate-y-full');
+                overlay.classList.remove('hidden');
+                requestAnimationFrame(() => overlay.classList.replace('opacity-0', 'opacity-100'));
+                menuIcon.classList.add('opacity-0', 'rotate-90');
+                closeIcon.classList.remove('opacity-0', 'rotate-90');
+            } else {
+                menu.classList.add('translate-y-full');
+                overlay.classList.replace('opacity-100', 'opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                menuIcon.classList.remove('opacity-0', 'rotate-90');
+                closeIcon.classList.add('opacity-0', 'rotate-90');
+            }
+        }
+        btn.addEventListener('click', toggle);
+        overlay.addEventListener('click', toggle);
+        menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { if (open) toggle(); }));
+    })();
+
+    // Animate result bars when chart enters viewport (and once on load)
+    (function animateResultChart() {
+        const chart = document.getElementById('result-chart-2021');
+        if (!chart) return;
+        const rows = chart.querySelectorAll('.result-row');
+        const max = Math.max(...Array.from(rows).map(r => parseFloat(r.dataset.pct) || 0));
+        function play() {
+            rows.forEach(r => {
+                const pct = parseFloat(r.dataset.pct) || 0;
+                const bar = r.querySelector('.result-bar');
+                // Width relative to strongest bar (visual scaling, not percentage)
+                bar.style.width = ((pct / max) * 100).toFixed(1) + '%';
+            });
+        }
+        if ('IntersectionObserver' in window) {
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(e => { if (e.isIntersecting) { play(); obs.disconnect(); } });
+            }, { threshold: 0.3 });
+            obs.observe(chart);
+        } else { setTimeout(play, 200); }
+    })();
+    </script>
+    <script src="src/js/site-config.js"></script>
+</body>
+</html>
+
