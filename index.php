@@ -514,9 +514,7 @@ function renderShellStart(array $branding, array $mainMenu): string {
         . '<div id="mobile-menu" class="fixed bottom-0 left-0 right-0 z-[999] lg:hidden translate-y-full transition-transform duration-500 ease-out">'
         . '<div class="bg-white rounded-t-3xl shadow-2xl shadow-black/20 max-h-[85vh] overflow-y-auto">'
         . '<div class="flex justify-center pt-3 pb-2"><div class="w-12 h-1.5 bg-gray-300 rounded-full"></div></div>'
-        . '<div class="px-6 pb-4"><p class="text-xs font-bold text-primary uppercase tracking-widest mb-3">Navigation</p>'
-        . '<div class="flex items-center gap-3"><img src="' . $headerLogo . '" data-brand-logo="header" alt="Logo" class="h-10 w-auto mb-4 max-w-[6rem]"><span class="brand-wordmark brand-wordmark-mobile mb-4">' . $headerWordmark . '</span></div></div>'
-        . '<nav class="px-6 pb-8 space-y-1">' . $mobileMenu . '</nav></div></div>'
+        . '<nav class="px-6 pt-2 pb-8 space-y-1">' . $mobileMenu . '</nav></div></div>'
         . '<button id="mobile-menu-btn" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[1000] lg:hidden w-14 h-14 bg-primary text-white rounded-full shadow-xl shadow-primary/30 flex items-center justify-center hover:bg-primary-dark transition-all active:scale-95">'
         . '<span class="material-symbols-outlined text-2xl menu-icon transition-transform duration-300">menu</span>'
         . '<span class="material-symbols-outlined text-2xl close-icon absolute transition-transform duration-300 opacity-0 rotate-90">close</span>'
@@ -551,7 +549,7 @@ function renderShellEnd(array $branding, array $footerMenu): string {
         . '<li><a href="/datenschutz" class="text-gray-400 hover:text-primary transition-colors">Datenschutz</a></li>'
         . '</ul>'
         . '<div class="mt-6"><h4 class="font-bold mb-3 text-sm uppercase tracking-widest text-gray-400">Kontakt</h4>'
-        . '<div class="flex items-center gap-2 text-sm text-gray-400"><span class="material-symbols-outlined text-primary text-base">mail</span>info@zukunft-wulften.de</div></div>'
+        . '<div class="flex items-center gap-2 text-sm text-gray-400"><span class="material-symbols-outlined text-primary text-base">mail</span>info@wkc-ev.de</div></div>'
         . '</div></div>'
         . '<div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500">'
         . '<p>&copy; ' . date('Y') . ' <span data-site-name>' . h((string) ($branding['siteName'] ?? SITE_NAME)) . '</span>. Alle Rechte vorbehalten.</p>'
@@ -879,16 +877,6 @@ $head = renderSeoHead($title, $description, $canonical, $noindex, $nofollow, $og
                     </div>
                 </section>
             <?php endif; ?>
-
-            <section id="vorstand" class="py-16 bg-gray-50">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 class="text-3xl font-extrabold text-gray-900">Vorstand</h2>
-                    <div class="w-16 h-1 rounded-full mt-3 bg-primary"></div>
-                    <div id="vorstandGrid" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <p class="text-sm text-gray-400 sm:col-span-2 lg:col-span-4">Vorstand wird geladen...</p>
-                    </div>
-                </div>
-            </section>
 
             <section id="mitglied-werden" class="py-24 bg-gradient-to-br from-primary to-primary-dark relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
