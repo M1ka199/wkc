@@ -292,7 +292,7 @@ function emailTemplate(string $title, string $content, ?string $buttonText = nul
                                 WKC e.V.
                             </p>
                             <p style="margin: 0 0 12px; font-size: 12px; color: #d1d5db;">
-                                37199 Wulften am Harz &bull; info@zukunft-wulften.de
+                                37199 Wulften am Harz &bull; info@wkc-ev.de
                             </p>
                             <p style="margin: 0; font-size: 11px; color: #d1d5db;">
                                 &copy; 2021–' . $year . ' WKC. Alle Rechte vorbehalten.
@@ -313,7 +313,7 @@ function emailTemplate(string $title, string $content, ?string $buttonText = nul
 // ============================
 
 /**
- * Kontaktformular-Benachrichtigung â†’ an info@zukunft-wulften.de
+ * Kontaktformular-Benachrichtigung â†’ an info@wkc-ev.de
  */
 function emailContactNotification(string $name, string $email, string $subject, string $message, bool $isAnonymous): string {
     $senderInfo = $isAnonymous
@@ -366,7 +366,7 @@ function emailContactConfirmation(string $name, string $subject): string {
 }
 
 /**
- * Beitrittsanfrage-Benachrichtigung â†’ an info@zukunft-wulften.de
+ * Beitrittsanfrage-Benachrichtigung â†’ an info@wkc-ev.de
  */
 function emailMembershipNotification(string $name, string $email, string $phone, string $message): string {
     $content = '
@@ -480,7 +480,7 @@ function emailPasswordChanged(string $name): string {
         <p style="margin: 0 0 16px;">Ihr Passwort für das Backend der WKC wurde erfolgreich geändert.</p>
         <div style="background: #fefce8; padding: 16px 20px; border-radius: 12px; border-left: 4px solid #eab308; margin: 20px 0;">
             <p style="margin: 0; font-size: 14px; color: #854d0e;">
-                Falls Sie diese Änderung nicht veranlasst haben, kontaktieren Sie bitte umgehend den Administrator unter <a href="mailto:info@zukunft-wulften.de" style="color: #7c3aed;">info@zukunft-wulften.de</a>.
+                Falls Sie diese Änderung nicht veranlasst haben, kontaktieren Sie bitte umgehend den Administrator unter <a href="mailto:info@wkc-ev.de" style="color: #7c3aed;">info@wkc-ev.de</a>.
             </p>
         </div>
         <p style="margin: 0 0 8px;">Ihre WKC</p>';
