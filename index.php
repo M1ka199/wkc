@@ -721,6 +721,7 @@ if ($path === 'qr-code') {
                     <div id="qrCanvasWrap" class="w-full max-w-[512px] min-h-[260px] border border-dashed border-gray-300 rounded-xl bg-gray-50 flex items-center justify-center p-4">
                         <p id="qrEmpty" class="text-sm text-gray-500">Noch kein QR-Code erstellt.</p>
                         <canvas id="qrCanvas" class="hidden max-w-full h-auto"></canvas>
+                        <img id="qrImage" class="hidden max-w-full h-auto" alt="QR-Code Vorschau">
                     </div>
                     <div class="mt-4 w-full flex flex-wrap gap-2 justify-center">
                         <button id="qrDownload" type="button" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50" disabled>PNG herunterladen</button>
@@ -731,44 +732,79 @@ if ($path === 'qr-code') {
         </main>
         <?= renderShellEnd($branding, $footerMenu) ?>
         <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+        <script src="https://unpkg.com/qrcode@1.5.4/build/qrcode.min.js"></script>
         <script>
             (function () {
                 const content = document.getElementById('qrContent');
                 const size = document.getElementById('qrSize');
                 const generateBtn = document.getElementById('qrGenerate');
                 const canvas = document.getElementById('qrCanvas');
+                const image = document.getElementById('qrImage');
                 const emptyState = document.getElementById('qrEmpty');
                 const downloadBtn = document.getElementById('qrDownload');
                 const printBtn = document.getElementById('qrPrint');
-                if (!content || !size || !generateBtn || !canvas || !downloadBtn || !printBtn || !emptyState || typeof QRCode === 'undefined') return;
+                if (!content || !size || !generateBtn || !canvas || !image || !downloadBtn || !printBtn || !emptyState) return;
+                let currentPngUrl = '';
 
                 const setReady = (ready) => {
                     downloadBtn.disabled = !ready;
                     printBtn.disabled = !ready;
-                    canvas.classList.toggle('hidden', !ready);
+                    canvas.classList.toggle('hidden', !ready || !canvas.dataset.active);
+                    image.classList.toggle('hidden', !ready || !image.dataset.active);
                     emptyState.classList.toggle('hidden', ready);
+                    if (!ready && !emptyState.textContent.trim()) {
+                        emptyState.textContent = 'Noch kein QR-Code erstellt.';
+                    }
                 };
                 setReady(false);
+
+                const setActivePreview = (type) => {
+                    canvas.dataset.active = type === 'canvas' ? '1' : '';
+                    image.dataset.active = type === 'image' ? '1' : '';
+                };
+
+                const buildFallbackUrl = (text, px) => {
+                    return 'https://api.qrserver.com/v1/create-qr-code/?size=' + encodeURIComponent(px + 'x' + px) + '&margin=2&data=' + encodeURIComponent(text);
+                };
 
                 const createCode = async () => {
                     const text = content.value.trim();
                     if (!text) {
+                        currentPngUrl = '';
+                        setActivePreview('');
                         setReady(false);
                         return;
                     }
                     const px = Math.max(160, Math.min(1024, Number(size.value || 256)));
-                    try {
-                        await QRCode.toCanvas(canvas, text, {
-                            width: px,
-                            margin: 2,
-                            color: { dark: '#111827', light: '#ffffff' },
-                            errorCorrectionLevel: 'M'
-                        });
-                        setReady(true);
-                    } catch (error) {
-                        console.error('QR generation failed:', error);
-                        setReady(false);
+                    if (typeof QRCode !== 'undefined' && typeof QRCode.toCanvas === 'function') {
+                        try {
+                            await QRCode.toCanvas(canvas, text, {
+                                width: px,
+                                margin: 2,
+                                color: { dark: '#111827', light: '#ffffff' },
+                                errorCorrectionLevel: 'M'
+                            });
+                            currentPngUrl = canvas.toDataURL('image/png');
+                            setActivePreview('canvas');
+                            emptyState.textContent = 'Noch kein QR-Code erstellt.';
+                            setReady(true);
+                            return;
+                        } catch (error) {
+                            console.error('QR generation with library failed, fallback is used:', error);
+                        }
                     }
+
+                    currentPngUrl = buildFallbackUrl(text, px);
+                    image.src = currentPngUrl;
+                    image.onerror = () => {
+                        currentPngUrl = '';
+                        setActivePreview('');
+                        setReady(false);
+                        emptyState.textContent = 'QR-Code konnte nicht erzeugt werden.';
+                    };
+                    setActivePreview('image');
+                    emptyState.textContent = 'Noch kein QR-Code erstellt.';
+                    setReady(true);
                 };
 
                 generateBtn.addEventListener('click', createCode);
@@ -777,12 +813,12 @@ if ($path === 'qr-code') {
                 });
                 downloadBtn.addEventListener('click', () => {
                     const link = document.createElement('a');
-                    link.href = canvas.toDataURL('image/png');
+                    link.href = currentPngUrl || canvas.toDataURL('image/png');
                     link.download = 'wkc-qr-code.png';
                     link.click();
                 });
                 printBtn.addEventListener('click', () => {
-                    const data = canvas.toDataURL('image/png');
+                    const data = currentPngUrl || canvas.toDataURL('image/png');
                     const w = window.open('', '_blank', 'width=600,height=700');
                     if (!w) return;
                     w.document.write('<!doctype html><html><head><title>QR-Code</title><style>body{margin:0;padding:2rem;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:Arial,sans-serif;}img{max-width:100%;height:auto;}</style></head><body><img src="' + data + '" alt="QR-Code"></body></html>');

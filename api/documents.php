@@ -35,6 +35,25 @@ $ALLOWED_DOC_TYPES = [
     'application/x-zip-compressed',
 ];
 
+function iniSizeToBytes(string $value): int {
+    $value = trim($value);
+    if ($value === '') {
+        return 0;
+    }
+    $unit = strtolower(substr($value, -1));
+    $number = (float) $value;
+    switch ($unit) {
+        case 'g':
+            return (int) ($number * 1024 * 1024 * 1024);
+        case 'm':
+            return (int) ($number * 1024 * 1024);
+        case 'k':
+            return (int) ($number * 1024);
+        default:
+            return (int) $number;
+    }
+}
+
 function isPdfDocument(array $doc): bool {
     $name = strtolower((string) ($doc['file_name'] ?? ''));
     return str_ends_with($name, '.pdf');
@@ -283,6 +302,16 @@ if ($method === 'POST' && $action === 'upload') {
 
     $title = trim($_POST['title'] ?? '');
     $description = trim($_POST['description'] ?? '');
+    $maxDocSize = 100 * 1024 * 1024;
+    $postMaxBytes = iniSizeToBytes((string) ini_get('post_max_size'));
+    $uploadMaxBytes = iniSizeToBytes((string) ini_get('upload_max_filesize'));
+    $contentLength = (int) ($_SERVER['CONTENT_LENGTH'] ?? 0);
+
+    if ($contentLength > 0 && $postMaxBytes > 0 && $contentLength > $postMaxBytes) {
+        jsonResponse([
+            'error' => 'Die Anfrage ist größer als das Server-Limit (post_max_size=' . ini_get('post_max_size') . '). Bitte Datei verkleinern oder Serverlimit erhöhen.'
+        ], 400);
+    }
 
     if (empty($title)) {
         jsonResponse(['error' => 'Titel erforderlich'], 400);
@@ -290,10 +319,10 @@ if ($method === 'POST' && $action === 'upload') {
 
     if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
         $errMap = [
-            UPLOAD_ERR_INI_SIZE   => 'Datei zu groß (Server-Limit)',
+            UPLOAD_ERR_INI_SIZE   => 'Datei überschreitet upload_max_filesize=' . ini_get('upload_max_filesize'),
             UPLOAD_ERR_FORM_SIZE  => 'Datei zu groß (Formular-Limit)',
             UPLOAD_ERR_PARTIAL    => 'Datei nur teilweise hochgeladen',
-            UPLOAD_ERR_NO_FILE    => 'Keine Datei ausgewählt',
+            UPLOAD_ERR_NO_FILE    => 'Keine Datei ausgewählt oder Server hat die Anfrage wegen Größenlimit verworfen',
             UPLOAD_ERR_NO_TMP_DIR => 'Temporäres Verzeichnis fehlt',
             UPLOAD_ERR_CANT_WRITE => 'Schreibfehler auf Festplatte',
         ];
@@ -302,9 +331,9 @@ if ($method === 'POST' && $action === 'upload') {
     }
 
     $file = $_FILES['file'];
-
-    // Validate size (100 MB for documents)
-    $maxDocSize = 100 * 1024 * 1024;
+    if ($uploadMaxBytes > 0 && $file['size'] > $uploadMaxBytes) {
+        jsonResponse(['error' => 'Datei überschreitet upload_max_filesize=' . ini_get('upload_max_filesize')], 400);
+    }
     if ($file['size'] > $maxDocSize) {
         jsonResponse(['error' => 'Datei zu groß (max. 100 MB)'], 400);
     }
