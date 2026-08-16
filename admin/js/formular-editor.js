@@ -14,6 +14,7 @@ const FORM_TYPES = [
     { value: 'file', label: 'Datei-Upload' },
     { value: 'signature', label: 'Signatur-Pad' },
     { value: 'heading', label: 'Überschrift' },
+    { value: 'info', label: 'Infotext (ohne Eingabe)' },
     { value: 'divider', label: 'Trennelement' },
 ];
 
@@ -91,7 +92,7 @@ function renderFields() {
     list.innerHTML = formBuilderState.fields.map((field, index) => {
         const type = field.type || 'text';
         const layoutWidth = ['full', 'half', 'third'].includes(field.layoutWidth) ? field.layoutWidth : 'full';
-        const isStructural = type === 'heading' || type === 'divider';
+        const isStructural = type === 'heading' || type === 'info' || type === 'divider';
         const isSelect = type === 'select';
         const isCheckbox = type === 'checkbox';
         const isFile = type === 'file';
@@ -130,8 +131,8 @@ function renderFields() {
                         </select>
                     </div>
                     <div>
-                        <label class="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">${type === 'heading' ? 'Überschriftstext' : 'Label'}</label>
-                        <input data-field-input="${index}" data-key="label" type="text" class="w-full rounded-lg border-gray-300 text-sm" value="${formEscape(field.label)}" placeholder="${type === 'divider' ? 'Optionaler Trenner-Titel' : ''}">
+                        <label class="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">${type === 'heading' ? 'Überschriftstext' : (type === 'info' ? 'Infotext' : 'Label')}</label>
+                        <input data-field-input="${index}" data-key="label" type="text" class="w-full rounded-lg border-gray-300 text-sm" value="${formEscape(field.label)}" placeholder="${type === 'divider' ? 'Optionaler Trenner-Titel' : (type === 'info' ? 'z. B. Bitte lesen Sie die Hinweise vor dem Absenden.' : '')}">
                     </div>
                 </div>
 
@@ -396,7 +397,7 @@ function handleFieldInput(eventTarget) {
         field.name = fieldNameFromLabel(field.label, index);
     }
     if (key === 'type') {
-        if (field.type === 'heading' || field.type === 'divider') {
+        if (field.type === 'heading' || field.type === 'info' || field.type === 'divider') {
             field.required = false;
             field.name = '';
             field.layoutWidth = 'full';
