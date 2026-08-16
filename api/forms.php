@@ -458,7 +458,86 @@ function renderSubmissionEmailBody(array $form, array $submittedFields, array $a
     return emailTemplate('Neue Formular-Einsendung', $content, 'Zum Backend', SITE_URL . '/admin/formulare.php');
 }
 
-function sendFormSubmissionMail(array $form, array $submittedFields, array $attachments): bool {
+function findSubmittedEmail(array $submittedFields): ?string {
+    foreach ($submittedFields as $field) {
+        if (($field['type'] ?? '') !== 'email') {
+            continue;
+        }
+        $value = trim((string) ($field['value'] ?? ''));
+        if ($value !== '' && filter_var($value, FILTER_VALIDATE_EMAIL)) {
+            return $value;
+        }
+    }
+    return null;
+}
+
+function submittedFieldValueForSubject(array $value): string {
+    if (!array_key_exists('value', $value)) {
+        return '';
+    }
+    $rawValue = $value['value'];
+    if (is_bool($rawValue)) {
+        $text = $rawValue ? 'Ja' : 'Nein';
+    } elseif (is_array($rawValue)) {
+        $text = implode(', ', array_map(static function ($item): string {
+            return trim((string) $item);
+        }, $rawValue));
+    } else {
+        $text = trim((string) $rawValue);
+    }
+    $text = preg_replace('/[\r\n\t]+/', ' ', $text);
+    return trim((string) $text);
+}
+
+function buildSubmissionSubject(array $form, array $submittedFields): string {
+    $templateSubject = trim((string) ($form['email_subject'] ?? ''));
+    if ($templateSubject === '') {
+        $templateSubject = 'Neue Formular-Einsendung: {form_title}';
+    }
+
+    $replacements = [
+        '{form_title}' => (string) ($form['title'] ?? 'Formular'),
+        '{form_slug}' => (string) ($form['slug'] ?? ''),
+        '{date}' => date('d.m.Y'),
+        '{time}' => date('H:i'),
+    ];
+
+    foreach ($submittedFields as $field) {
+        $name = sanitizeFieldName((string) ($field['name'] ?? ''));
+        if ($name === '') {
+            continue;
+        }
+        $replacements['{field:' . $name . '}'] = submittedFieldValueForSubject($field);
+    }
+
+    return strtr($templateSubject, $replacements);
+}
+
+function renderSubmissionConfirmationBody(array $form): string {
+    $title = (string) ($form['title'] ?? 'Formular');
+    $content = '<p style="margin:0 0 16px;">Vielen Dank für Ihre Einsendung.</p>'
+        . '<p style="margin:0 0 16px;">Wir haben Ihre Nachricht zum Formular <strong>' . escForm($title) . '</strong> erhalten und melden uns bei Bedarf bei Ihnen.</p>';
+
+    return emailTemplate('Kopie Ihrer Einsendung', $content, 'Zur Website', SITE_URL);
+}
+
+function sendFormSubmissionMail(array $form, array $submittedFields, array $attachments): array {
+    $result = [
+        'notificationSent' => false,
+        'confirmationSent' => null,
+    ];
+
+    $replyEmail = findSubmittedEmail($submittedFields);
+    $replyName = '';
+    if ($replyEmail !== null) {
+        foreach ($submittedFields as $field) {
+            if (($field['type'] ?? '') === 'email' && trim((string) ($field['value'] ?? '')) === $replyEmail) {
+                $replyName = (string) ($field['label'] ?? '');
+                break;
+            }
+        }
+    }
+
     try {
         $mail = createMailerForForm($form);
         $recipients = parseRecipients((string) ($form['email_recipients'] ?? ''));
@@ -466,31 +545,12 @@ function sendFormSubmissionMail(array $form, array $submittedFields, array $atta
             $mail->addAddress($recipient);
         }
 
-        $replyEmail = null;
-        $replyName = null;
-        foreach ($submittedFields as $field) {
-            if (($field['type'] ?? '') === 'email' && !empty($field['value']) && filter_var($field['value'], FILTER_VALIDATE_EMAIL)) {
-                $replyEmail = (string) $field['value'];
-                $replyName = (string) ($field['label'] ?? '');
-                break;
-            }
-        }
         if ($replyEmail !== null) {
             $mail->clearReplyTos();
             $mail->addReplyTo($replyEmail, $replyName ?: '');
         }
 
-        $templateSubject = trim((string) ($form['email_subject'] ?? ''));
-        if ($templateSubject === '') {
-            $templateSubject = 'Neue Formular-Einsendung: {form_title}';
-        }
-        $mail->Subject = strtr($templateSubject, [
-            '{form_title}' => (string) ($form['title'] ?? 'Formular'),
-            '{form_slug}' => (string) ($form['slug'] ?? ''),
-            '{date}' => date('d.m.Y'),
-            '{time}' => date('H:i'),
-        ]);
-
+        $mail->Subject = buildSubmissionSubject($form, $submittedFields);
         $mail->Body = renderSubmissionEmailBody($form, $submittedFields, $attachments);
         $mail->AltBody = 'Neue Formular-Einsendung: ' . (string) ($form['title'] ?? 'Formular');
         foreach ($submittedFields as $field) {
@@ -510,11 +570,12 @@ function sendFormSubmissionMail(array $form, array $submittedFields, array $atta
         }
 
         $mail->send();
+        $result['notificationSent'] = true;
+
         if (function_exists('recordMailDeliveryAttempt')) {
             $context = 'form:' . (string) ($form['slug'] ?? 'unknown');
             recordMailDeliveryAttempt(true, $context);
         }
-        return true;
     } catch (Throwable $e) {
         error_log('WKC dynamic form mail error: ' . $e->getMessage());
         $details = trim((string) $e->getMessage());
@@ -522,8 +583,25 @@ function sendFormSubmissionMail(array $form, array $submittedFields, array $atta
             $context = 'form:' . (string) ($form['slug'] ?? 'unknown');
             recordMailDeliveryAttempt(false, $context, $details !== '' ? $details : null);
         }
-        return false;
+        return $result;
     }
+
+    if ($replyEmail !== null) {
+        try {
+            $confirmationMail = createMailerForForm($form);
+            $confirmationMail->addAddress($replyEmail);
+            $confirmationMail->Subject = 'Kopie Ihrer Anfrage: ' . (string) ($form['title'] ?? 'Formular');
+            $confirmationMail->Body = renderSubmissionConfirmationBody($form);
+            $confirmationMail->AltBody = 'Vielen Dank. Wir haben Ihre Einsendung zum Formular "' . (string) ($form['title'] ?? 'Formular') . '" erhalten.';
+            $confirmationMail->send();
+            $result['confirmationSent'] = true;
+        } catch (Throwable $e) {
+            error_log('WKC dynamic form confirmation mail error: ' . $e->getMessage());
+            $result['confirmationSent'] = false;
+        }
+    }
+
+    return $result;
 }
 
 function formFieldForPublicApi(array $field): array {
@@ -716,11 +794,13 @@ if ($method === 'POST' && $action === 'submit') {
         ':user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
     ]);
 
-    $mailSent = sendFormSubmissionMail($form, $submitted, $attachments);
+    $mailResult = sendFormSubmissionMail($form, $submitted, $attachments);
+    $mailSent = (bool) ($mailResult['notificationSent'] ?? false);
     $response = [
         'success' => true,
         'message' => (string) ($form['success_message'] ?? 'Vielen Dank! Ihre Anfrage wurde erfolgreich übermittelt.'),
         'mailDelivered' => $mailSent,
+        'confirmationSent' => $mailResult['confirmationSent'] ?? null,
     ];
     if (!$mailSent) {
         $response['warning'] = 'Ihre Eingabe wurde gespeichert, konnte aber nicht per E-Mail weitergeleitet werden. Bitte kontaktieren Sie den Administrator.';
