@@ -57,6 +57,23 @@ function renderSeoHead(string $title, string $description, string $canonical, bo
     if ($ogImage !== '') {
         $html .= '<meta property="og:image" content="' . h($ogImage) . '">';
     }
+    $iconLinks = [];
+    $candidates = [
+        ['/favicon.ico', 'image/x-icon', 'shortcut icon'],
+        ['/src/wkc-logo.png', 'image/png', 'icon'],
+        ['/src/wkc-logo.svg', 'image/svg+xml', 'icon'],
+        ['/src/logo.svg', 'image/svg+xml', 'icon'],
+    ];
+    foreach ($candidates as [$path, $type, $rel]) {
+        if (is_file(__DIR__ . $path)) {
+            $iconLinks[] = '<link rel="' . h($rel) . '" type="' . h($type) . '" href="' . h($path) . '">';
+        }
+    }
+    if (!$iconLinks) {
+        $iconLinks[] = '<link rel="icon" type="image/svg+xml" href="/src/wkc-logo.svg">';
+    }
+    $iconLinks[] = '<link rel="apple-touch-icon" href="/src/wkc-logo.svg">';
+    $html .= implode('', $iconLinks);
     return $html;
 }
 
@@ -624,6 +641,215 @@ if ($path === 'galerien') {
     <body>
         <?= renderShellStart($branding, $mainMenu) ?>
         <main class="pt-24" style="max-width: 1100px; margin: 0 auto; padding: 3rem 1rem 5rem;"><h1 style="margin:0 0 .75rem;">Galerien</h1><?= renderGalleryCards($rows) ?></main>
+        <?= renderShellEnd($branding, $footerMenu) ?>
+        <script src="/src/js/main.js"></script>
+    </body></html>
+    <?php
+    exit;
+}
+
+if ($path === 'dokumente') {
+    $rows = $db->query("SELECT id, title, description, file_name, file_size, created_at FROM documents WHERE lower(file_name) LIKE '%.pdf' ORDER BY created_at DESC")->fetchAll();
+    $title = 'Dokumente - ' . (string) ($seo['defaultMetaTitle'] ?? SITE_NAME);
+    $desc = 'PDF-Dokumente und Festzeitschriften des Vereins';
+    $head = renderSeoHead($title, $desc, canonicalForPath('dokumente'), false, false, (string) ($seo['defaultOgImage'] ?? ''));
+    ?>
+    <!DOCTYPE html>
+    <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><?= $head ?><script>tailwind={};tailwind.config={theme:{extend:{colors:{primary:'#7c3aed','primary-dark':'#5b21b6','primary-light':'#a78bfa','bg-light':'#f8faf9','bg-section':'#f1f5f3',surface:'#ffffff'}}}};</script><script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script><link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"><link rel="stylesheet" href="/src/css/style.css"></head>
+    <body>
+        <?= renderShellStart($branding, $mainMenu) ?>
+        <main class="pt-24" style="max-width: 1100px; margin: 0 auto; padding: 3rem 1rem 5rem;">
+            <h1 style="margin:0 0 .75rem;">Dokumente</h1>
+            <p style="margin:0 0 1.25rem; color:#6b7280;">PDF-Dokumente können direkt im Browser geöffnet werden.</p>
+            <?php if (!$rows): ?>
+                <p style="color:#6b7280;">Aktuell sind keine PDF-Dokumente verfügbar.</p>
+            <?php else: ?>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem;">
+                    <?php foreach ($rows as $doc): ?>
+                        <article style="border:1px solid #e5e7eb; border-radius:14px; padding:1rem; background:#fff;">
+                            <h2 style="margin:0 0 .45rem; font-size:1.05rem; font-weight:800;"><?= h((string) ($doc['title'] ?? 'Dokument')) ?></h2>
+                            <?php if (trim((string) ($doc['description'] ?? '')) !== ''): ?>
+                                <p style="margin:0 0 .55rem; color:#6b7280;"><?= h((string) $doc['description']) ?></p>
+                            <?php endif; ?>
+                            <p style="margin:0 0 .7rem; color:#9ca3af; font-size:.85rem;"><?= h((string) ($doc['file_name'] ?? 'PDF')) ?></p>
+                            <a href="/dokument/<?= (int) $doc['id'] ?>" style="text-decoration:none; color:var(--site-primary,#7c3aed); font-weight:700;">Im PDF-Viewer öffnen</a>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </main>
+        <?= renderShellEnd($branding, $footerMenu) ?>
+        <script src="/src/js/main.js"></script>
+    </body></html>
+    <?php
+    exit;
+}
+
+if ($path === 'qr-code') {
+    $title = 'QR-Code Generator - ' . (string) ($seo['defaultMetaTitle'] ?? SITE_NAME);
+    $desc = 'QR-Codes für Links, Events, Downloads oder Freitext erzeugen';
+    $head = renderSeoHead($title, $desc, canonicalForPath('qr-code'), false, false, (string) ($seo['defaultOgImage'] ?? ''));
+    ?>
+    <!DOCTYPE html>
+    <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><?= $head ?><script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script><script>tailwind={};tailwind.config={theme:{extend:{colors:{primary:'#7c3aed','primary-dark':'#5b21b6','primary-light':'#a78bfa','bg-light':'#f8faf9','bg-section':'#f1f5f3',surface:'#ffffff'}}}};</script><link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"><link rel="stylesheet" href="/src/css/style.css"></head>
+    <body>
+        <?= renderShellStart($branding, $mainMenu) ?>
+        <main class="pt-24" style="max-width: 1100px; margin: 0 auto; padding: 3rem 1rem 5rem;">
+            <h1 style="margin:0 0 .75rem;">QR-Code Generator</h1>
+            <p style="margin:0 0 1.25rem; color:#6b7280;">Erzeugen Sie QR-Codes für Links, Formulardaten, Eventinfos oder Downloads.</p>
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <article class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <label class="block text-sm font-bold text-gray-700 mb-2" for="qrContent">Inhalt</label>
+                    <textarea id="qrContent" rows="6" class="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm" placeholder="https://example.de/event/123"></textarea>
+                    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-600 uppercase tracking-wider mb-1" for="qrSize">Größe</label>
+                            <select id="qrSize" class="w-full rounded-lg border-gray-300 text-sm">
+                                <option value="256">256 px</option>
+                                <option value="320">320 px</option>
+                                <option value="512">512 px</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button id="qrGenerate" type="button" class="w-full inline-flex items-center justify-center rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white hover:bg-primary-dark transition-colors">
+                                QR-Code erzeugen
+                            </button>
+                        </div>
+                    </div>
+                </article>
+                <article class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm flex flex-col items-center justify-center">
+                    <div id="qrCanvasWrap" class="w-full max-w-[512px] min-h-[260px] border border-dashed border-gray-300 rounded-xl bg-gray-50 flex items-center justify-center p-4">
+                        <p id="qrEmpty" class="text-sm text-gray-500">Noch kein QR-Code erstellt.</p>
+                        <canvas id="qrCanvas" class="hidden max-w-full h-auto"></canvas>
+                    </div>
+                    <div class="mt-4 w-full flex flex-wrap gap-2 justify-center">
+                        <button id="qrDownload" type="button" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50" disabled>PNG herunterladen</button>
+                        <button id="qrPrint" type="button" class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50" disabled>Drucken</button>
+                    </div>
+                </article>
+            </section>
+        </main>
+        <?= renderShellEnd($branding, $footerMenu) ?>
+        <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+        <script>
+            (function () {
+                const content = document.getElementById('qrContent');
+                const size = document.getElementById('qrSize');
+                const generateBtn = document.getElementById('qrGenerate');
+                const canvas = document.getElementById('qrCanvas');
+                const emptyState = document.getElementById('qrEmpty');
+                const downloadBtn = document.getElementById('qrDownload');
+                const printBtn = document.getElementById('qrPrint');
+                if (!content || !size || !generateBtn || !canvas || !downloadBtn || !printBtn || !emptyState || typeof QRCode === 'undefined') return;
+
+                const setReady = (ready) => {
+                    downloadBtn.disabled = !ready;
+                    printBtn.disabled = !ready;
+                    canvas.classList.toggle('hidden', !ready);
+                    emptyState.classList.toggle('hidden', ready);
+                };
+                setReady(false);
+
+                const createCode = async () => {
+                    const text = content.value.trim();
+                    if (!text) {
+                        setReady(false);
+                        return;
+                    }
+                    const px = Math.max(160, Math.min(1024, Number(size.value || 256)));
+                    try {
+                        await QRCode.toCanvas(canvas, text, {
+                            width: px,
+                            margin: 2,
+                            color: { dark: '#111827', light: '#ffffff' },
+                            errorCorrectionLevel: 'M'
+                        });
+                        setReady(true);
+                    } catch (error) {
+                        console.error('QR generation failed:', error);
+                        setReady(false);
+                    }
+                };
+
+                generateBtn.addEventListener('click', createCode);
+                size.addEventListener('change', () => {
+                    if (!downloadBtn.disabled) createCode();
+                });
+                downloadBtn.addEventListener('click', () => {
+                    const link = document.createElement('a');
+                    link.href = canvas.toDataURL('image/png');
+                    link.download = 'wkc-qr-code.png';
+                    link.click();
+                });
+                printBtn.addEventListener('click', () => {
+                    const data = canvas.toDataURL('image/png');
+                    const w = window.open('', '_blank', 'width=600,height=700');
+                    if (!w) return;
+                    w.document.write('<!doctype html><html><head><title>QR-Code</title><style>body{margin:0;padding:2rem;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:Arial,sans-serif;}img{max-width:100%;height:auto;}</style></head><body><img src="' + data + '" alt="QR-Code"></body></html>');
+                    w.document.close();
+                    w.focus();
+                    w.print();
+                });
+
+                const url = new URL(window.location.href);
+                const presetText = (url.searchParams.get('text') || '').trim();
+                if (presetText) {
+                    content.value = presetText;
+                    createCode();
+                }
+            })();
+        </script>
+        <script src="/src/js/main.js"></script>
+    </body></html>
+    <?php
+    exit;
+}
+
+if (preg_match('~^dokument/(\d+)$~', $path, $m)) {
+    $docId = (int) $m[1];
+    $stmt = $db->prepare("SELECT id, title, description, file_name FROM documents WHERE id = :id LIMIT 1");
+    $stmt->execute([':id' => $docId]);
+    $doc = $stmt->fetch();
+
+    $isPdf = $doc && str_ends_with(strtolower((string) ($doc['file_name'] ?? '')), '.pdf');
+    if (!$isPdf) {
+        http_response_code(404);
+        $title = 'Dokument nicht gefunden - ' . (string) ($seo['defaultMetaTitle'] ?? SITE_NAME);
+        $desc = (string) ($seo['defaultMetaDescription'] ?? '');
+        $head = renderSeoHead($title, $desc, canonicalForPath('dokument/' . $docId), true, true, (string) ($seo['defaultOgImage'] ?? ''));
+        ?>
+        <!DOCTYPE html>
+        <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><?= $head ?><link rel="stylesheet" href="/src/css/style.css"></head>
+        <body>
+            <main style="max-width: 760px; margin: 7rem auto; padding: 0 1rem;">
+                <h1>404</h1><p>Das gewünschte Dokument wurde nicht gefunden.</p><p><a href="/dokumente">Zur Dokumentenübersicht</a></p>
+            </main>
+            <script src="/src/js/site-config.js"></script>
+        </body></html>
+        <?php
+        exit;
+    }
+
+    $docTitle = trim((string) ($doc['title'] ?? 'Dokument'));
+    $title = $docTitle . ' - PDF Viewer';
+    $desc = trim((string) ($doc['description'] ?? 'PDF-Dokument'));
+    $head = renderSeoHead($title, $desc, canonicalForPath('dokument/' . $docId), false, false, (string) ($seo['defaultOgImage'] ?? ''));
+    $pdfSrc = '/api/documents.php?action=public_stream&id=' . $docId;
+    ?>
+    <!DOCTYPE html>
+    <html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><?= $head ?><script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script><script>tailwind={};tailwind.config={theme:{extend:{colors:{primary:'#7c3aed','primary-dark':'#5b21b6','primary-light':'#a78bfa','bg-light':'#f8faf9','bg-section':'#f1f5f3',surface:'#ffffff'}}}};</script><link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"><link rel="stylesheet" href="/src/css/style.css"></head>
+    <body>
+        <?= renderShellStart($branding, $mainMenu) ?>
+        <main class="pt-24" style="max-width: 1300px; margin: 0 auto; padding: 2rem 1rem 4rem;">
+            <p style="margin:0 0 .5rem;"><a href="/dokumente">Zur Dokumentenübersicht</a></p>
+            <h1 style="margin:0 0 .65rem; font-size:clamp(1.5rem,2.3vw,2.2rem);"><?= h($docTitle) ?></h1>
+            <?php if (trim((string) ($doc['description'] ?? '')) !== ''): ?>
+                <p style="margin:0 0 1rem; color:#6b7280;"><?= h((string) $doc['description']) ?></p>
+            <?php endif; ?>
+            <div style="height:min(80vh,980px); border:1px solid #e5e7eb; border-radius:14px; overflow:hidden; background:#fff;">
+                <iframe src="<?= h($pdfSrc) ?>" title="<?= h($docTitle) ?>" style="width:100%; height:100%; border:0;" loading="eager"></iframe>
+            </div>
+        </main>
         <?= renderShellEnd($branding, $footerMenu) ?>
         <script src="/src/js/main.js"></script>
     </body></html>

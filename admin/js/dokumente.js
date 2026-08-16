@@ -134,6 +134,7 @@ function renderDocuments() {
         const tagsHtml = (d.tags || []).map(t =>
             `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold text-white" style="background-color:${escapeHtml(t.color)}">${escapeHtml(t.name)}</span>`
         ).join(' ');
+        const viewerUrl = d.viewer_url ? escapeHtml(d.viewer_url) : '';
 
         return `
             <tr class="hover:bg-bg-light/30 transition-colors">
@@ -155,6 +156,7 @@ function renderDocuments() {
                 <td class="px-6 py-4 text-sm text-gray-500 hidden md:table-cell whitespace-nowrap">${size}</td>
                 <td class="px-6 py-4 text-sm text-gray-500 hidden md:table-cell whitespace-nowrap">${date}</td>
                 <td class="px-6 py-4 text-right whitespace-nowrap">
+                    ${viewerUrl ? `<a href="..${viewerUrl}" target="_blank" rel="noopener" class="text-gray-400 hover:text-primary transition-colors p-1" title="Viewer öffnen"><span class="material-symbols-outlined text-xl">open_in_new</span></a>` : ''}
                     <button onclick="openTagAssign(${d.id})" class="text-gray-400 hover:text-primary transition-colors p-1" title="Tags zuweisen">
                         <span class="material-symbols-outlined text-xl">label</span>
                     </button>
@@ -536,4 +538,3 @@ document.addEventListener('DOMContentLoaded', () => {
     loadDocuments();
     setupDropZone();
 });
-

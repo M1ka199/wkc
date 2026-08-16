@@ -7,6 +7,7 @@ const FORM_TYPES = [
     { value: 'text', label: 'Textfeld' },
     { value: 'email', label: 'E-Mail' },
     { value: 'tel', label: 'Telefon' },
+    { value: 'date', label: 'Datum' },
     { value: 'textarea', label: 'Textbereich' },
     { value: 'select', label: 'Dropdown' },
     { value: 'checkbox', label: 'Checkbox' },
@@ -89,14 +90,14 @@ function renderFields() {
 
     list.innerHTML = formBuilderState.fields.map((field, index) => {
         const type = field.type || 'text';
-        const layoutWidth = field.layoutWidth === 'half' ? 'half' : 'full';
+        const layoutWidth = ['full', 'half', 'third'].includes(field.layoutWidth) ? field.layoutWidth : 'full';
         const isStructural = type === 'heading' || type === 'divider';
         const isSelect = type === 'select';
         const isCheckbox = type === 'checkbox';
         const isFile = type === 'file';
         const isTextarea = type === 'textarea';
         const isSignature = type === 'signature';
-        const isRowConfigurable = ['text', 'email', 'tel', 'textarea', 'signature'].includes(type);
+        const isRowConfigurable = ['text', 'email', 'tel', 'date', 'textarea', 'signature'].includes(type);
         const rowMin = isSignature ? 10 : 1;
         const rowMax = isSignature ? 30 : 20;
         const rowDefault = defaultFieldRows(type);
@@ -151,6 +152,7 @@ function renderFields() {
                         <select data-field-input="${index}" data-key="layoutWidth" class="w-full rounded-lg border-gray-300 text-sm">
                             <option value="full" ${layoutWidth === 'full' ? 'selected' : ''}>Volle Breite</option>
                             <option value="half" ${layoutWidth === 'half' ? 'selected' : ''}>Halbe Breite</option>
+                            <option value="third" ${layoutWidth === 'third' ? 'selected' : ''}>Drittelbreite (33,3%)</option>
                         </select>
                     </div>
                 </div>
@@ -252,7 +254,7 @@ function mapFieldFromApi(field) {
         placeholder: field.placeholder || '',
         helpText: field.helpText || '',
         required: !!field.required,
-        layoutWidth: field.layoutWidth === 'half' ? 'half' : 'full',
+        layoutWidth: ['full', 'half', 'third'].includes(field.layoutWidth) ? field.layoutWidth : 'full',
         selectOptions: field.selectOptions || '',
         checkboxText: field.checkboxText || '',
         accept: field.accept || '',
@@ -370,7 +372,7 @@ function handleFieldInput(eventTarget) {
     if (key === 'required') {
         field.required = !!eventTarget.checked;
     } else if (key === 'layoutWidth') {
-        field.layoutWidth = eventTarget.value === 'half' ? 'half' : 'full';
+        field.layoutWidth = ['full', 'half', 'third'].includes(eventTarget.value) ? eventTarget.value : 'full';
     } else if (key === 'maxSizeMb') {
         field.maxSizeMb = Math.max(1, Math.min(20, Number(eventTarget.value || 10)));
     } else if (key === 'textareaRows') {

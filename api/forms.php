@@ -16,7 +16,7 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $action = $_GET['action'] ?? '';
 $db = getDB();
 
-const FORM_FIELD_TYPES = ['text', 'email', 'tel', 'textarea', 'select', 'checkbox', 'file', 'signature', 'heading', 'divider'];
+const FORM_FIELD_TYPES = ['text', 'email', 'tel', 'date', 'textarea', 'select', 'checkbox', 'file', 'signature', 'heading', 'divider'];
 
 function escForm(string $value): string {
     return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -83,7 +83,7 @@ function parseRecipients(string $raw): array {
 function decodeFieldOptions(string $type, array $field): array {
     $options = [];
     $layoutWidth = strtolower(trim((string) ($field['layoutWidth'] ?? 'full')));
-    $options['layoutWidth'] = in_array($layoutWidth, ['full', 'half'], true) ? $layoutWidth : 'full';
+    $options['layoutWidth'] = in_array($layoutWidth, ['full', 'half', 'third'], true) ? $layoutWidth : 'full';
 
     if ($type === 'select') {
         $rawOptions = $field['selectOptions'] ?? [];
@@ -121,7 +121,7 @@ function decodeFieldOptions(string $type, array $field): array {
         $options['textareaRows'] = $rows;
         $options['fieldRows'] = $rows;
     }
-    if (in_array($type, ['text', 'email', 'tel'], true)) {
+    if (in_array($type, ['text', 'email', 'tel', 'date'], true)) {
         $options['fieldRows'] = max(1, min(20, (int) ($field['fieldRows'] ?? 1)));
     }
     if ($type === 'signature') {
@@ -172,7 +172,7 @@ function decodeAndValidateFields(string $fieldsJson): array {
             $required = 0;
         }
 
-        if (in_array($type, ['text', 'email', 'tel', 'textarea', 'select', 'checkbox', 'file', 'signature', 'heading'], true) && $label === '') {
+        if (in_array($type, ['text', 'email', 'tel', 'date', 'textarea', 'select', 'checkbox', 'file', 'signature', 'heading'], true) && $label === '') {
             jsonResponse(['error' => 'Bitte hinterlegen Sie ein Label/Titel für Feld ' . ($idx + 1) . '.'], 400);
         }
 
@@ -781,6 +781,9 @@ if ($method === 'POST' && $action === 'submit') {
         if ($type === 'tel' && $value !== '' && mb_strlen($value) < 3) {
             jsonResponse(['error' => 'Die Telefonnummer im Feld "' . $label . '" ist ungültig.'], 400);
         }
+        if ($type === 'date' && $value !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+            jsonResponse(['error' => 'Bitte ein gültiges Datum im Feld "' . $label . '" eingeben.'], 400);
+        }
 
         $submitted[] = ['type' => $type, 'name' => $name, 'label' => $label, 'value' => $value];
     }
@@ -862,7 +865,7 @@ if ($method === 'GET' && $action === 'detail') {
             'placeholder' => (string) ($field['placeholder'] ?? ''),
             'helpText' => (string) ($field['help_text'] ?? ''),
             'required' => (int) ($field['is_required'] ?? 0) === 1,
-            'layoutWidth' => (($options['layoutWidth'] ?? 'full') === 'half') ? 'half' : 'full',
+            'layoutWidth' => in_array(($options['layoutWidth'] ?? 'full'), ['full', 'half', 'third'], true) ? (string) $options['layoutWidth'] : 'full',
             'selectOptions' => implode("\n", is_array($options['values'] ?? null) ? $options['values'] : []),
             'checkboxText' => (string) ($options['checkboxText'] ?? ''),
             'accept' => (string) ($options['accept'] ?? ''),
