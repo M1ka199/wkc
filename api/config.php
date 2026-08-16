@@ -178,9 +178,8 @@ function runUtf8DataRepair(PDO $db): void {
         repairUtf8MojibakeTable($db, 'contact_messages', 'id', ['name', 'email', 'subject', 'message', 'type']);
 
         $markStmt = $db->prepare("
-            INSERT INTO app_settings (key, value, updated_at)
+            INSERT OR REPLACE INTO app_settings (key, value, updated_at)
             VALUES ('utf8_repair_v1_done', '1', datetime('now'))
-            ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = datetime('now')
         ");
         $markStmt->execute();
         $db->commit();
@@ -1023,9 +1022,8 @@ function setAppSetting(string $key, $value): void {
     $db = getDB();
     $encoded = is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE);
 
-    $stmt = $db->prepare("INSERT INTO app_settings (key, value, updated_at)
-        VALUES (:key, :value, datetime('now'))
-        ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = datetime('now')");
+    $stmt = $db->prepare("INSERT OR REPLACE INTO app_settings (key, value, updated_at)
+        VALUES (:key, :value, datetime('now'))");
     $stmt->execute([
         ':key' => $key,
         ':value' => $encoded,
