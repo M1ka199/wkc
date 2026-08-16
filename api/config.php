@@ -14,6 +14,7 @@ ini_set('default_charset', 'UTF-8');
 // ============================
 define('DB_PATH', __DIR__ . '/data/wkc.sqlite');
 define('LEGACY_DB_PATH', __DIR__ . '/data/' . 'zukunft' . '_wulften.sqlite');
+define('FORMS_DB_PATH', __DIR__ . '/data/contact_forms.sqlite');
 
 // ============================
 // App Settings
@@ -224,6 +225,34 @@ function getDB(): PDO {
         }
     }
     return $pdo;
+}
+
+function getFormsDB(): PDO {
+    static $formsPdo = null;
+    if ($formsPdo === null) {
+        try {
+            $dir = dirname(FORMS_DB_PATH);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+
+            $formsPdo = new PDO('sqlite:' . FORMS_DB_PATH, null, null, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ]);
+
+            $formsPdo->exec('PRAGMA journal_mode=WAL');
+            $formsPdo->exec('PRAGMA foreign_keys=ON');
+            setupFormsDatabase($formsPdo);
+            migrateFormsToDedicatedDatabase($formsPdo);
+        } catch (Throwable $e) {
+            error_log('WKC forms database connection error: ' . $e->getMessage());
+            http_response_code(500);
+            die(json_encode(['error' => 'Formular-Datenbankverbindung fehlgeschlagen.']));
+        }
+    }
+    return $formsPdo;
 }
 
 // ============================
@@ -919,6 +948,125 @@ function setupDatabase(?PDO $db = null): void {
     }
 
     runUtf8DataRepair($db);
+}
+
+function setupFormsDatabase(PDO $db): void {
+    $db->exec("CREATE TABLE IF NOT EXISTS forms (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        slug TEXT NOT NULL UNIQUE,
+        description TEXT DEFAULT NULL,
+        target_path TEXT DEFAULT NULL,
+        success_message TEXT DEFAULT 'Vielen Dank! Ihre Anfrage wurde erfolgreich Ã¼bermittelt.',
+        submit_label TEXT DEFAULT 'Formular absenden',
+        is_active INTEGER DEFAULT 1,
+        email_recipients TEXT NOT NULL,
+        email_subject TEXT NOT NULL,
+        smtp_host TEXT DEFAULT NULL,
+        smtp_port INTEGER DEFAULT NULL,
+        smtp_secure TEXT DEFAULT NULL,
+        smtp_user TEXT DEFAULT NULL,
+        smtp_pass TEXT DEFAULT NULL,
+        smtp_from TEXT DEFAULT NULL,
+        smtp_from_name TEXT DEFAULT NULL,
+        created_by INTEGER DEFAULT NULL,
+        created_at TEXT DEFAULT (datetime('now')),
+        updated_at TEXT DEFAULT (datetime('now'))
+    )");
+
+    $db->exec("CREATE TABLE IF NOT EXISTS form_fields (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        form_id INTEGER NOT NULL,
+        field_type TEXT NOT NULL CHECK(field_type IN ('text','email','tel','date','textarea','select','checkbox','file','signature','heading','info','divider')),
+        field_name TEXT DEFAULT NULL,
+        field_label TEXT DEFAULT NULL,
+        placeholder TEXT DEFAULT NULL,
+        help_text TEXT DEFAULT NULL,
+        options_json TEXT DEFAULT '{}',
+        is_required INTEGER DEFAULT 0,
+        sort_order INTEGER DEFAULT 0,
+        created_at TEXT DEFAULT (datetime('now')),
+        updated_at TEXT DEFAULT (datetime('now')),
+        FOREIGN KEY (form_id) REFERENCES forms(id) ON DELETE CASCADE
+    )");
+
+    $db->exec("CREATE TABLE IF NOT EXISTS form_submissions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        form_id INTEGER NOT NULL,
+        payload_json TEXT NOT NULL,
+        attachments_json TEXT DEFAULT '[]',
+        ip_address TEXT DEFAULT NULL,
+        user_agent TEXT DEFAULT NULL,
+        created_at TEXT DEFAULT (datetime('now')),
+        FOREIGN KEY (form_id) REFERENCES forms(id) ON DELETE CASCADE
+    )");
+
+    $db->exec("CREATE INDEX IF NOT EXISTS idx_forms_slug ON forms(slug)");
+    $db->exec("CREATE INDEX IF NOT EXISTS idx_forms_active ON forms(is_active)");
+    $db->exec("CREATE INDEX IF NOT EXISTS idx_form_fields_form_sort ON form_fields(form_id, sort_order)");
+    $db->exec("CREATE INDEX IF NOT EXISTS idx_form_submissions_form_date ON form_submissions(form_id, created_at DESC)");
+}
+
+function migrateFormsToDedicatedDatabase(PDO $formsDb): void {
+    $formsCount = (int) $formsDb->query("SELECT COUNT(*) FROM forms")->fetchColumn();
+    if ($formsCount > 0) {
+        return;
+    }
+
+    $legacyPath = resolveDatabasePath();
+    if ($legacyPath === FORMS_DB_PATH || !file_exists($legacyPath)) {
+        return;
+    }
+
+    $legacyDb = getDB();
+    $legacyFormsCount = (int) $legacyDb->query("SELECT COUNT(*) FROM forms")->fetchColumn();
+    if ($legacyFormsCount === 0) {
+        return;
+    }
+
+    $formsDb->beginTransaction();
+    try {
+        $formsDb->exec("
+            INSERT INTO forms (
+                id, title, slug, description, target_path, success_message, submit_label, is_active,
+                email_recipients, email_subject, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass, smtp_from, smtp_from_name,
+                created_by, created_at, updated_at
+            )
+            SELECT
+                id, title, slug, description, target_path, success_message, submit_label, is_active,
+                email_recipients, email_subject, smtp_host, smtp_port, smtp_secure, smtp_user, smtp_pass, smtp_from, smtp_from_name,
+                created_by, created_at, updated_at
+            FROM forms
+        ");
+
+        $formsDb->exec("
+            INSERT INTO form_fields (
+                id, form_id, field_type, field_name, field_label, placeholder, help_text, options_json, is_required, sort_order, created_at, updated_at
+            )
+            SELECT
+                id, form_id, field_type, field_name, field_label, placeholder, help_text, options_json, is_required, sort_order, created_at, updated_at
+            FROM form_fields
+        ");
+
+        $formsDb->exec("
+            INSERT INTO form_submissions (
+                id, form_id, payload_json, attachments_json, ip_address, user_agent, created_at
+            )
+            SELECT
+                id, form_id, payload_json, attachments_json, ip_address, user_agent, created_at
+            FROM form_submissions
+        ");
+
+        $formsDb->exec("UPDATE sqlite_sequence SET seq = (SELECT COALESCE(MAX(id), 0) FROM forms) WHERE name = 'forms'");
+        $formsDb->exec("UPDATE sqlite_sequence SET seq = (SELECT COALESCE(MAX(id), 0) FROM form_fields) WHERE name = 'form_fields'");
+        $formsDb->exec("UPDATE sqlite_sequence SET seq = (SELECT COALESCE(MAX(id), 0) FROM form_submissions) WHERE name = 'form_submissions'");
+        $formsDb->commit();
+    } catch (Throwable $e) {
+        if ($formsDb->inTransaction()) {
+            $formsDb->rollBack();
+        }
+        throw $e;
+    }
 }
 
 function migrateLegacyBrandingSettings(PDO $db): void {

@@ -4,6 +4,7 @@ header('Content-Type: text/html; charset=utf-8');
 
 getDB();
 $db = getDB();
+$formsDb = getFormsDB();
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $path = trim($path, '/');
@@ -310,13 +311,13 @@ function renderFormEmbed(string $slug): string {
     return '<div data-wkc-form="' . h($safeSlug) . '" class="wkc-form-embed" style="margin:1.25rem 0;"></div>';
 }
 
-function appendTargetPathForms(PDO $db, string $path, string $content): string {
+function appendTargetPathForms(PDO $formsDb, string $path, string $content): string {
     $normalizedPath = strtolower(trim($path, '/'));
     if ($normalizedPath === '') {
         return $content;
     }
 
-    $stmt = $db->prepare("SELECT slug FROM forms WHERE is_active = 1 AND target_path = :path ORDER BY updated_at DESC, id DESC");
+    $stmt = $formsDb->prepare("SELECT slug FROM forms WHERE is_active = 1 AND target_path = :path ORDER BY updated_at DESC, id DESC");
     $stmt->execute([':path' => $normalizedPath]);
     $slugs = $stmt->fetchAll(PDO::FETCH_COLUMN) ?: [];
     if (!$slugs) {
@@ -449,7 +450,7 @@ function renderHomeSliderItems(array $items): string {
         . '</div></section>';
 }
 
-function renderStaticRouteWithCms(PDO $db, string $filePath, string $routePath, array $branding, array $mainMenu, array $footerMenu, array $seo): void {
+function renderStaticRouteWithCms(PDO $db, PDO $formsDb, string $filePath, string $routePath, array $branding, array $mainMenu, array $footerMenu, array $seo): void {
     $html = @file_get_contents($filePath);
     if ($html === false) {
         http_response_code(500);
@@ -470,7 +471,7 @@ function renderStaticRouteWithCms(PDO $db, string $filePath, string $routePath, 
     $content = preg_replace_callback('/\[form:([a-zA-Z0-9\-_]+)\]/', static function ($m) {
         return renderFormEmbed((string) $m[1]);
     }, $content);
-    $content = appendTargetPathForms($db, $routePath, $content);
+    $content = appendTargetPathForms($formsDb, $routePath, $content);
     $pageScripts = extractStaticRouteScripts($html);
     $normalizedRoute = strtolower(trim($routePath, '/'));
     $isBoardPage = $normalizedRoute === 'vorstand';
@@ -923,7 +924,7 @@ if (preg_match('~^galerie/([^/]+)$~', $path, $m)) {
 
 if (preg_match('~^formular/([a-z0-9\-_]+)$~i', $path, $m)) {
     $slug = strtolower((string) $m[1]);
-    $stmt = $db->prepare('SELECT title, description, slug FROM forms WHERE slug = :slug AND is_active = 1 LIMIT 1');
+    $stmt = $formsDb->prepare('SELECT title, description, slug FROM forms WHERE slug = :slug AND is_active = 1 LIMIT 1');
     $stmt->execute([':slug' => $slug]);
     $formPage = $stmt->fetch();
 
@@ -975,7 +976,7 @@ if (array_key_exists($path, $staticRoutes)) {
     if (!$hasDynamicPage) {
         $file = __DIR__ . '/' . $staticRoutes[$path];
         if (is_file($file)) {
-            renderStaticRouteWithCms($db, $file, $path, $branding, $mainMenu, $footerMenu, $seo);
+            renderStaticRouteWithCms($db, $formsDb, $file, $path, $branding, $mainMenu, $footerMenu, $seo);
             exit;
         }
     }
@@ -1019,7 +1020,7 @@ $content = preg_replace_callback('/\[gallery:([a-zA-Z0-9\-]+)\]/', function ($m)
 $content = preg_replace_callback('/\[form:([a-zA-Z0-9\-_]+)\]/', static function ($m) {
     return renderFormEmbed((string) $m[1]);
 }, $content);
-$content = appendTargetPathForms($db, (string) ($page['path'] ?? ''), $content);
+$content = appendTargetPathForms($formsDb, (string) ($page['path'] ?? ''), $content);
 $content = normalizeLegacyHtmlLinks($content);
 
 $isHomepage = ((string) $page['path'] === '');

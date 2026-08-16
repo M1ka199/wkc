@@ -10,6 +10,7 @@ header('Content-Type: application/json; charset=utf-8');
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? 'list';
 $db = getDB();
+$formsDb = getFormsDB();
 
 function uploadPageMedia(array $file): string {
     if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
@@ -105,18 +106,35 @@ if ($method === 'GET') {
             p.title,
             p.path,
             p.status,
-            p.updated_at,
-            (
-                SELECT COUNT(*)
-                FROM forms f
-                WHERE f.target_path = p.path
-            ) AS forms_count
+            p.updated_at
         FROM site_pages p
         {$where}
         ORDER BY p.updated_at DESC
     ");
     $stmt->execute($params);
-    jsonResponse(['pages' => $stmt->fetchAll()]);
+    $pages = $stmt->fetchAll();
+
+    $countsStmt = $formsDb->query("
+        SELECT target_path, COUNT(*) AS total
+        FROM forms
+        WHERE target_path IS NOT NULL AND target_path != ''
+        GROUP BY target_path
+    ");
+    $formsCountByPath = [];
+    while ($row = $countsStmt->fetch()) {
+        $pathKey = strtolower(trim((string) ($row['target_path'] ?? ''), '/'));
+        if ($pathKey === '') {
+            continue;
+        }
+        $formsCountByPath[$pathKey] = (int) ($row['total'] ?? 0);
+    }
+
+    foreach ($pages as &$page) {
+        $pagePath = strtolower(trim((string) ($page['path'] ?? ''), '/'));
+        $page['forms_count'] = $formsCountByPath[$pagePath] ?? 0;
+    }
+
+    jsonResponse(['pages' => $pages]);
 }
 
 if ($method === 'POST') {
