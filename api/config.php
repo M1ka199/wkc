@@ -641,8 +641,30 @@ function setupDatabase(?PDO $db = null): void {
             updated_at TEXT DEFAULT (datetime('now')),
             FOREIGN KEY (form_id) REFERENCES forms(id) ON DELETE CASCADE
         )");
+        $existingCols = $db->query("PRAGMA table_info(form_fields)")->fetchAll();
+        $existingColNames = array_column($existingCols, 'name');
+        $hasColumn = static function (string $column) use ($existingColNames): bool {
+            return in_array($column, $existingColNames, true);
+        };
+
+        $allowedFieldTypes = "'text','email','tel','date','textarea','select','checkbox','file','signature','heading','info','divider'";
+        $idExpr = $hasColumn('id') ? 'id' : 'NULL';
+        $formIdExpr = $hasColumn('form_id') ? 'form_id' : 'NULL';
+        $fieldTypeExpr = $hasColumn('field_type')
+            ? "CASE WHEN field_type IN (" . $allowedFieldTypes . ") THEN field_type ELSE 'text' END"
+            : "'text'";
+        $fieldNameExpr = $hasColumn('field_name') ? 'field_name' : 'NULL';
+        $fieldLabelExpr = $hasColumn('field_label') ? 'field_label' : 'NULL';
+        $placeholderExpr = $hasColumn('placeholder') ? 'placeholder' : 'NULL';
+        $helpTextExpr = $hasColumn('help_text') ? 'help_text' : 'NULL';
+        $optionsExpr = $hasColumn('options_json') ? 'options_json' : "'{}'";
+        $requiredExpr = $hasColumn('is_required') ? 'is_required' : '0';
+        $sortExpr = $hasColumn('sort_order') ? 'sort_order' : '0';
+        $createdExpr = $hasColumn('created_at') ? 'created_at' : "datetime('now')";
+        $updatedExpr = $hasColumn('updated_at') ? 'updated_at' : "datetime('now')";
+
         $db->exec("INSERT INTO form_fields_new (id, form_id, field_type, field_name, field_label, placeholder, help_text, options_json, is_required, sort_order, created_at, updated_at)
-            SELECT id, form_id, field_type, field_name, field_label, placeholder, help_text, options_json, is_required, sort_order, created_at, updated_at
+            SELECT {$idExpr}, {$formIdExpr}, {$fieldTypeExpr}, {$fieldNameExpr}, {$fieldLabelExpr}, {$placeholderExpr}, {$helpTextExpr}, {$optionsExpr}, {$requiredExpr}, {$sortExpr}, {$createdExpr}, {$updatedExpr}
             FROM form_fields");
         $db->exec("DROP TABLE form_fields");
         $db->exec("ALTER TABLE form_fields_new RENAME TO form_fields");
