@@ -236,20 +236,45 @@ a:hover {
     display: block;
 }
 
-.wkc-dynamic-form input,
+.wkc-dynamic-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
 .wkc-dynamic-form select,
-.wkc-dynamic-form textarea,
-#contact-form input,
+#contact-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
 #contact-form select,
-#contact-form textarea,
-#membership-form input,
+#membership-form input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
 #membership-form select,
+#memberLoginForm input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+#memberLoginForm select {
+    min-height: 0;
+    height: 2.85rem;
+    border-radius: 0.75rem;
+}
+
+.wkc-dynamic-form textarea,
+#contact-form textarea,
 #membership-form textarea,
-#memberLoginForm input,
-#memberLoginForm select,
 #memberLoginForm textarea {
     min-height: 2.85rem;
     border-radius: 0.75rem;
+}
+
+.mobile-nav-link {
+    display: flex;
+    align-items: center;
+}
+
+.mobile-nav-link .material-symbols-outlined {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wkc-signature-canvas,
+.wkc-signature-canvas-mobile {
+    touch-action: none;
+}
+
+.wkc-signature-modal {
+    overscroll-behavior: contain;
 }
 
 @media (min-width: 768px) {

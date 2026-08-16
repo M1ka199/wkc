@@ -191,8 +191,8 @@ function renderDesktopMenuItems(array $items): string {
                 $childLabel = trim((string) ($child['label'] ?? ''));
                 if ($childLabel === '') continue;
                 $childUrl = normalizeMenuUrl((string) ($child['url'] ?? '#'));
-                $html .= '<a href="' . h($childUrl) . '" class="flex items-start gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">'
-                    . '<span class="material-symbols-outlined text-primary mt-0.5">chevron_right</span>'
+                $html .= '<a href="' . h($childUrl) . '" class="flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 hover:text-primary transition-colors">'
+                    . '<span class="material-symbols-outlined text-primary">chevron_right</span>'
                     . '<div><div class="font-bold text-sm text-gray-900">' . h($childLabel) . '</div></div></a>';
             }
             $html .= '</div></div></div>';
@@ -224,7 +224,9 @@ function renderMobileMenuItems(array $items): string {
                 $childLabel = trim((string) ($child['label'] ?? ''));
                 if ($childLabel === '') continue;
                 $childUrl = normalizeMenuUrl((string) ($child['url'] ?? '#'));
-                $html .= '<a href="' . h($childUrl) . '" class="block px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">' . h($childLabel) . '</a>';
+                $html .= '<a href="' . h($childUrl) . '" class="mobile-nav-link flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-primary/5 hover:text-primary transition-all">'
+                    . '<span class="material-symbols-outlined text-[18px] text-primary/60">chevron_right</span>'
+                    . '<span>' . h($childLabel) . '</span></a>';
             }
             $html .= '</div></details>';
             continue;
@@ -507,7 +509,7 @@ function renderShellStart(array $branding, array $mainMenu): string {
     $headerWordmark = 'WKC';
     return '<nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-md shadow-sm">'
         . '<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><div class="flex justify-between h-20 items-center">'
-        . '<a href="/" class="flex items-center group"><img src="' . $headerLogo . '" data-brand-logo="header" alt="Logo" class="h-12 w-auto max-w-[6rem]"><span class="brand-wordmark hidden sm:inline">' . $headerWordmark . '</span></a>'
+        . '<a href="/" class="flex items-center group mx-auto lg:mx-0"><img src="' . $headerLogo . '" data-brand-logo="header" alt="Logo" class="h-12 w-auto max-w-[6rem]"><span class="brand-wordmark hidden sm:inline">' . $headerWordmark . '</span></a>'
         . '<div class="hidden lg:flex items-center gap-1">' . $desktopMenu . '</div>'
         . '</div></div></nav>'
         . '<div id="mobile-menu-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300 lg:hidden"></div>'
@@ -690,7 +692,7 @@ if (preg_match('~^formular/([a-z0-9\-_]+)$~i', $path, $m)) {
             <?php if (trim((string) ($formPage['description'] ?? '')) !== ''): ?>
                 <p style="margin:0 0 1.25rem; color:#6b7280;"><?= h((string) $formPage['description']) ?></p>
             <?php endif; ?>
-            <div data-wkc-form="<?= h($slug) ?>" class="wkc-form-embed"></div>
+            <div data-wkc-form="<?= h($slug) ?>" data-wkc-form-standalone="1" class="wkc-form-embed"></div>
         </main>
         <?= renderShellEnd($branding, $footerMenu) ?>
         <script src="/src/js/main.js"></script>

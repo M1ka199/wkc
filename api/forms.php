@@ -116,6 +116,9 @@ function decodeFieldOptions(string $type, array $field): array {
         $options['accept'] = $accept !== '' ? $accept : '.pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.webp,.txt,.csv,.zip';
         $options['maxSizeMb'] = $maxSizeMb;
     }
+    if ($type === 'textarea') {
+        $options['textareaRows'] = max(2, min(20, (int) ($field['textareaRows'] ?? 4)));
+    }
     return $options;
 }
 
@@ -856,6 +859,7 @@ if ($method === 'GET' && $action === 'detail') {
             'checkboxText' => (string) ($options['checkboxText'] ?? ''),
             'accept' => (string) ($options['accept'] ?? ''),
             'maxSizeMb' => (int) ($options['maxSizeMb'] ?? 10),
+            'textareaRows' => (int) ($options['textareaRows'] ?? 4),
         ];
     }
 

@@ -58,6 +58,7 @@ function createField(type = 'text') {
         checkboxText: '',
         accept: '',
         maxSizeMb: 10,
+        textareaRows: 4,
     };
 }
 
@@ -86,6 +87,7 @@ function renderFields() {
         const isSelect = type === 'select';
         const isCheckbox = type === 'checkbox';
         const isFile = type === 'file';
+        const isTextarea = type === 'textarea';
         const supportsPlaceholder = ['text', 'email', 'tel', 'textarea'].includes(type);
         const typeOptions = FORM_TYPES.map((option) => `<option value="${option.value}" ${option.value === type ? 'selected' : ''}>${option.label}</option>`).join('');
 
@@ -171,6 +173,13 @@ function renderFields() {
                     </div>
                 </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 ${isTextarea ? '' : 'hidden'}">
+                    <div>
+                        <label class="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">Sichtbare Zeilen</label>
+                        <input data-field-input="${index}" data-key="textareaRows" type="number" min="2" max="20" class="w-full rounded-lg border-gray-300 text-sm" value="${Math.max(2, Math.min(20, Number(field.textareaRows || 4)))}">
+                    </div>
+                </div>
+
                 <label class="inline-flex items-center gap-2 mt-3 text-sm text-gray-700 ${isStructural ? 'hidden' : ''}">
                     <input data-field-input="${index}" data-key="required" type="checkbox" class="rounded border-gray-300 text-primary" ${field.required ? 'checked' : ''}>
                     Pflichtfeld
@@ -235,6 +244,7 @@ function mapFieldFromApi(field) {
         checkboxText: field.checkboxText || '',
         accept: field.accept || '',
         maxSizeMb: Number(field.maxSizeMb || 10),
+        textareaRows: Math.max(2, Math.min(20, Number(field.textareaRows || 4))),
     };
 }
 
@@ -343,6 +353,8 @@ function handleFieldInput(eventTarget) {
         field.layoutWidth = eventTarget.value === 'half' ? 'half' : 'full';
     } else if (key === 'maxSizeMb') {
         field.maxSizeMb = Math.max(1, Math.min(20, Number(eventTarget.value || 10)));
+    } else if (key === 'textareaRows') {
+        field.textareaRows = Math.max(2, Math.min(20, Number(eventTarget.value || 4)));
     } else {
         field[key] = eventTarget.value;
     }
