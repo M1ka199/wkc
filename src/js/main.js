@@ -426,7 +426,7 @@ function renderDynamicFormField(field, index, fieldIndex) {
     }
 
     if (type === 'textarea') {
-        const rows = Math.max(2, Math.min(20, Number(field.options?.textareaRows || 4)));
+        const rows = Math.max(2, Math.min(20, Number(field.options?.fieldRows || field.options?.textareaRows || 4)));
         return `
             <div class="${fieldSpanClass}">
                 <label class="mb-1 block text-sm font-bold text-gray-700" for="dyn-${name}-${index}-${fieldIndex}">${label}${requiredMark}</label>
@@ -466,7 +466,7 @@ function renderDynamicFormField(field, index, fieldIndex) {
             <div class="${fieldSpanClass}">
                 <p class="mb-1 text-sm font-bold text-gray-700">${label}${requiredMark}</p>
                 <label class="inline-flex items-start gap-3 text-sm text-gray-700">
-                    <input type="checkbox" name="${name}" value="1" class="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary" ${requiredAttr}>
+                    <input type="checkbox" name="${name}" value="1" class="mt-0.5 wkc-checkbox" ${requiredAttr}>
                     <span>${checkboxText}</span>
                 </label>
                 ${helpText ? `<p class="mt-1 text-xs text-gray-500">${helpText}</p>` : ''}
@@ -488,12 +488,15 @@ function renderDynamicFormField(field, index, fieldIndex) {
 
     if (type === 'signature') {
         const signatureId = escapeDynamicValue(`${name}-${index}-${fieldIndex}`);
+        const signatureRows = Math.max(10, Math.min(30, Number(field.options?.fieldRows || 10)));
+        const signatureDesktopHeight = signatureRows * 24;
+        const signatureMobileHeight = Math.max(280, signatureRows * 28);
         return `
             <div class="wkc-signature-field ${fieldSpanClass}" data-signature-field="${signatureId}">
                 <label class="mb-1 block text-sm font-bold text-gray-700">${label}${requiredMark}</label>
 
                 <div class="hidden md:block overflow-hidden rounded-xl border border-gray-200 bg-white">
-                    <canvas class="wkc-signature-canvas block w-full" height="180"></canvas>
+                    <canvas class="wkc-signature-canvas block w-full" data-base-height="${signatureDesktopHeight}" height="${signatureDesktopHeight}"></canvas>
                 </div>
                 <div class="md:hidden rounded-xl border border-gray-200 bg-white p-3">
                     <div class="wkc-signature-mobile-preview h-24 rounded-lg border border-dashed border-gray-300 bg-gray-50 flex items-center justify-center overflow-hidden">
@@ -518,7 +521,7 @@ function renderDynamicFormField(field, index, fieldIndex) {
                             <button type="button" data-signature-close class="rounded-lg border border-gray-200 px-2.5 py-1.5 text-sm font-bold text-gray-600 hover:bg-gray-50">Schließen</button>
                         </div>
                         <div class="p-4">
-                            <canvas class="wkc-signature-canvas-mobile block w-full rounded-xl border border-gray-200 bg-white" height="280"></canvas>
+                            <canvas class="wkc-signature-canvas-mobile block w-full rounded-xl border border-gray-200 bg-white" data-base-height="${signatureMobileHeight}" height="${signatureMobileHeight}"></canvas>
                             <p class="mt-2 text-xs text-gray-500">${helpText || 'Bitte unterschreiben Sie im Feld.'}</p>
                             <div class="mt-4 flex items-center justify-between gap-2">
                                 <button type="button" data-signature-clear="${signatureId}" class="rounded-lg border border-gray-200 px-3 py-2 text-xs font-bold text-gray-600 hover:bg-gray-50">Löschen</button>
@@ -533,10 +536,12 @@ function renderDynamicFormField(field, index, fieldIndex) {
     }
 
     const inputType = ['email', 'tel'].includes(type) ? type : 'text';
+    const inputRows = Math.max(1, Math.min(20, Number(field.options?.fieldRows || 1)));
+    const inputHeightRem = (2.85 * inputRows).toFixed(2);
     return `
         <div class="${fieldSpanClass}">
             <label class="mb-1 block text-sm font-bold text-gray-700" for="dyn-${name}-${index}-${fieldIndex}">${label}${requiredMark}</label>
-            <input id="dyn-${name}-${index}-${fieldIndex}" name="${name}" type="${inputType}" class="${baseInputClass}" placeholder="${placeholder}" ${requiredAttr}>
+            <input id="dyn-${name}-${index}-${fieldIndex}" name="${name}" type="${inputType}" class="${baseInputClass}" style="min-height:2.85rem;height:${inputHeightRem}rem;" placeholder="${placeholder}" ${requiredAttr}>
             ${helpText ? `<p class="mt-1 text-xs text-gray-500">${helpText}</p>` : ''}
         </div>
     `;
@@ -555,6 +560,8 @@ function setupDynamicSignaturePads(formElement) {
         const previewEmpty = field.querySelector('.wkc-signature-preview-empty');
         const hidden = field.querySelector('input[type="hidden"]');
         const clearBtns = Array.from(field.querySelectorAll('[data-signature-clear]'));
+        const desktopBaseHeight = Math.max(180, Number(canvas?.getAttribute('data-base-height') || 180));
+        const mobileBaseHeight = Math.max(280, Number(mobileCanvas?.getAttribute('data-base-height') || 280));
         if (!hidden || (!canvas && !mobileCanvas)) return;
 
         const desktopContext = canvas ? canvas.getContext('2d') : null;
@@ -618,8 +625,8 @@ function setupDynamicSignaturePads(formElement) {
             applySignature('');
         };
 
-        resizeCanvas(canvas, desktopContext, 180);
-        resizeCanvas(mobileCanvas, mobileContext, 280);
+        resizeCanvas(canvas, desktopContext, desktopBaseHeight);
+        resizeCanvas(mobileCanvas, mobileContext, mobileBaseHeight);
         if (hidden.value) {
             applySignature(hidden.value);
         } else {
@@ -676,7 +683,7 @@ function setupDynamicSignaturePads(formElement) {
             if (!modal) return;
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
-            resizeCanvas(mobileCanvas, mobileContext, 280);
+            resizeCanvas(mobileCanvas, mobileContext, mobileBaseHeight);
             if (hidden.value) {
                 drawDataOnCanvas(mobileCanvas, mobileContext, hidden.value);
             }
@@ -708,8 +715,8 @@ function setupDynamicSignaturePads(formElement) {
         });
 
         window.addEventListener('resize', () => {
-            resizeCanvas(canvas, desktopContext, 180);
-            resizeCanvas(mobileCanvas, mobileContext, 280);
+            resizeCanvas(canvas, desktopContext, desktopBaseHeight);
+            resizeCanvas(mobileCanvas, mobileContext, mobileBaseHeight);
             if (hidden.value) {
                 applySignature(hidden.value);
             }
@@ -823,15 +830,13 @@ function loadVorstand() {
                 const delay = delays[i % delays.length];
 
                 return `
-                    <div class="group flex flex-col items-center scroll-animate ${delay}">
-                        <div class="relative mb-5">
-                            <div class="w-44 h-44 rounded-full overflow-hidden border-4 border-gray-100 shadow-lg group-hover:border-primary transition-all duration-300 group-hover:shadow-primary/20">
-                                ${img}
-                            </div>
+                    <article class="group w-full rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-xl transition-all duration-300 p-5 md:p-6 scroll-animate ${delay}">
+                        <div class="mx-auto mb-5 w-36 h-36 sm:w-40 sm:h-40 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-gray-100 shadow-lg group-hover:border-primary transition-all duration-300 group-hover:shadow-primary/20">
+                            ${img}
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary transition-colors">${esc(m.display_name)}</h3>
-                        <p class="text-sm text-gray-500 font-medium">${esc(m.position || '')}</p>
-                    </div>`;
+                        <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary transition-colors text-center">${esc(m.display_name)}</h3>
+                        <p class="mt-1 text-sm md:text-base text-gray-500 font-medium text-center">${esc(m.position || '')}</p>
+                    </article>`;
             }).join('');
 
             // Re-init scroll animations for new elements

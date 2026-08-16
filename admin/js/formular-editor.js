@@ -45,6 +45,12 @@ function fieldNameFromLabel(label, fallbackIndex) {
     return `field_${fallbackIndex + 1}`;
 }
 
+function defaultFieldRows(type) {
+    if (type === 'signature') return 10;
+    if (type === 'textarea') return 4;
+    return 1;
+}
+
 function createField(type = 'text') {
     return {
         type,
@@ -59,6 +65,7 @@ function createField(type = 'text') {
         accept: '',
         maxSizeMb: 10,
         textareaRows: 4,
+        fieldRows: defaultFieldRows(type),
     };
 }
 
@@ -88,6 +95,12 @@ function renderFields() {
         const isCheckbox = type === 'checkbox';
         const isFile = type === 'file';
         const isTextarea = type === 'textarea';
+        const isSignature = type === 'signature';
+        const isRowConfigurable = ['text', 'email', 'tel', 'textarea', 'signature'].includes(type);
+        const rowMin = isSignature ? 10 : 1;
+        const rowMax = isSignature ? 30 : 20;
+        const rowDefault = defaultFieldRows(type);
+        const fieldRows = Math.max(rowMin, Math.min(rowMax, Number(field.fieldRows || (isTextarea ? field.textareaRows : rowDefault) || rowDefault)));
         const supportsPlaceholder = ['text', 'email', 'tel', 'textarea'].includes(type);
         const typeOptions = FORM_TYPES.map((option) => `<option value="${option.value}" ${option.value === type ? 'selected' : ''}>${option.label}</option>`).join('');
 
@@ -173,10 +186,10 @@ function renderFields() {
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 ${isTextarea ? '' : 'hidden'}">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3 ${isRowConfigurable ? '' : 'hidden'}">
                     <div>
-                        <label class="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">Sichtbare Zeilen</label>
-                        <input data-field-input="${index}" data-key="textareaRows" type="number" min="2" max="20" class="w-full rounded-lg border-gray-300 text-sm" value="${Math.max(2, Math.min(20, Number(field.textareaRows || 4)))}">
+                        <label class="block text-[11px] font-bold text-gray-600 uppercase tracking-wider mb-1">${isSignature ? 'Signatur-Höhe (Zeilen)' : 'Feldhöhe (Zeilen)'}</label>
+                        <input data-field-input="${index}" data-key="fieldRows" type="number" min="${rowMin}" max="${rowMax}" class="w-full rounded-lg border-gray-300 text-sm" value="${fieldRows}">
                     </div>
                 </div>
 
@@ -245,6 +258,13 @@ function mapFieldFromApi(field) {
         accept: field.accept || '',
         maxSizeMb: Number(field.maxSizeMb || 10),
         textareaRows: Math.max(2, Math.min(20, Number(field.textareaRows || 4))),
+        fieldRows: Math.max(
+            field.type === 'signature' ? 10 : 1,
+            Math.min(
+                field.type === 'signature' ? 30 : 20,
+                Number(field.fieldRows || field.textareaRows || defaultFieldRows(field.type || 'text'))
+            )
+        ),
     };
 }
 
@@ -355,6 +375,17 @@ function handleFieldInput(eventTarget) {
         field.maxSizeMb = Math.max(1, Math.min(20, Number(eventTarget.value || 10)));
     } else if (key === 'textareaRows') {
         field.textareaRows = Math.max(2, Math.min(20, Number(eventTarget.value || 4)));
+        if (field.type === 'textarea') {
+            field.fieldRows = field.textareaRows;
+        }
+    } else if (key === 'fieldRows') {
+        const isSignature = field.type === 'signature';
+        const minRows = isSignature ? 10 : 1;
+        const maxRows = isSignature ? 30 : 20;
+        field.fieldRows = Math.max(minRows, Math.min(maxRows, Number(eventTarget.value || defaultFieldRows(field.type))));
+        if (field.type === 'textarea') {
+            field.textareaRows = Math.max(2, Math.min(20, field.fieldRows));
+        }
     } else {
         field[key] = eventTarget.value;
     }
@@ -367,8 +398,15 @@ function handleFieldInput(eventTarget) {
             field.required = false;
             field.name = '';
             field.layoutWidth = 'full';
+            field.fieldRows = defaultFieldRows(field.type);
         } else if (!field.name) {
             field.name = fieldNameFromLabel(field.label, index);
+        }
+        if (!Number(field.fieldRows)) {
+            field.fieldRows = defaultFieldRows(field.type);
+        }
+        if (field.type === 'textarea' && !Number(field.textareaRows)) {
+            field.textareaRows = 4;
         }
         renderFields();
         return;
