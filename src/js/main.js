@@ -428,15 +428,6 @@ function renderDynamicFormField(field, index, fieldIndex) {
         return `<div class="md:col-span-6"><h4 class="pt-1 text-lg font-bold text-gray-900">${label || 'Überschrift'}</h4></div>`;
     }
 
-    if (type === 'info') {
-        return `
-            <div class="md:col-span-6">
-                <p class="rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-gray-700">${label || 'Hinweis'}</p>
-                ${helpText ? `<p class="mt-1 text-xs text-gray-500">${helpText}</p>` : ''}
-            </div>
-        `;
-    }
-
     if (type === 'textarea') {
         const rows = Math.max(2, Math.min(20, Number(field.options?.fieldRows || field.options?.textareaRows || 4)));
         return `

@@ -309,13 +309,7 @@ document.getElementById('documentForm').addEventListener('submit', async (e) => 
             body: formData,
             credentials: 'include',
         });
-        const raw = await res.text();
-        let data = null;
-        try {
-            data = raw ? JSON.parse(raw) : {};
-        } catch (parseError) {
-            data = { error: raw || `HTTP ${res.status}` };
-        }
+        const data = await res.json();
 
         if (data.success && data.id) {
             // Assign tags if selected

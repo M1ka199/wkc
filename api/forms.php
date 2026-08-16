@@ -16,7 +16,7 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $action = $_GET['action'] ?? '';
 $db = getDB();
 
-const FORM_FIELD_TYPES = ['text', 'email', 'tel', 'date', 'textarea', 'select', 'checkbox', 'file', 'signature', 'heading', 'info', 'divider'];
+const FORM_FIELD_TYPES = ['text', 'email', 'tel', 'date', 'textarea', 'select', 'checkbox', 'file', 'signature', 'heading', 'divider'];
 
 function escForm(string $value): string {
     return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
@@ -154,7 +154,7 @@ function decodeAndValidateFields(string $fieldsJson): array {
         $required = !empty($field['required']) ? 1 : 0;
 
         $name = '';
-        if (!in_array($type, ['heading', 'info', 'divider'], true)) {
+        if (!in_array($type, ['heading', 'divider'], true)) {
             $name = sanitizeFieldName((string) ($field['name'] ?? ''));
             if ($name === '') {
                 $fallback = sanitizeFieldName($label);
@@ -172,12 +172,12 @@ function decodeAndValidateFields(string $fieldsJson): array {
             $required = 0;
         }
 
-        if (in_array($type, ['text', 'email', 'tel', 'date', 'textarea', 'select', 'checkbox', 'file', 'signature', 'heading', 'info'], true) && $label === '') {
+        if (in_array($type, ['text', 'email', 'tel', 'date', 'textarea', 'select', 'checkbox', 'file', 'signature', 'heading'], true) && $label === '') {
             jsonResponse(['error' => 'Bitte hinterlegen Sie ein Label/Titel für Feld ' . ($idx + 1) . '.'], 400);
         }
 
         $options = decodeFieldOptions($type, $field);
-        if (in_array($type, ['heading', 'info', 'divider'], true)) {
+        if (in_array($type, ['heading', 'divider'], true)) {
             $options['layoutWidth'] = 'full';
         }
 
@@ -195,6 +195,16 @@ function decodeAndValidateFields(string $fieldsJson): array {
 
     if (!$result) {
         jsonResponse(['error' => 'Bitte mindestens ein Formularfeld anlegen.'], 400);
+    }
+
+    $inputCount = 0;
+    foreach ($result as $field) {
+        if (!in_array($field['type'], ['heading', 'divider'], true)) {
+            $inputCount++;
+        }
+    }
+    if ($inputCount === 0) {
+        jsonResponse(['error' => 'Das Formular benötigt mindestens ein Eingabefeld.'], 400);
     }
 
     return $result;
@@ -674,7 +684,7 @@ if ($method === 'POST' && $action === 'submit') {
         $required = (int) ($field['is_required'] ?? 0) === 1;
         $options = is_array($field['options']) ? $field['options'] : [];
 
-        if (in_array($type, ['heading', 'info', 'divider'], true)) {
+        if (in_array($type, ['heading', 'divider'], true)) {
             continue;
         }
         if ($name === '') {
