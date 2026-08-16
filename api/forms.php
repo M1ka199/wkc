@@ -14,7 +14,7 @@ header('Content-Type: application/json; charset=utf-8');
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $action = $_GET['action'] ?? '';
-$db = getDB();
+$db = getFormsDB();
 
 const FORM_FIELD_TYPES = ['text', 'email', 'tel', 'date', 'textarea', 'select', 'checkbox', 'file', 'signature', 'heading', 'info', 'divider'];
 
