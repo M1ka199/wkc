@@ -600,7 +600,7 @@ function setupDatabase(?PDO $db = null): void {
     $db->exec("CREATE TABLE IF NOT EXISTS form_fields (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         form_id INTEGER NOT NULL,
-        field_type TEXT NOT NULL CHECK(field_type IN ('text','email','tel','textarea','select','checkbox','file','signature','heading','divider')),
+        field_type TEXT NOT NULL CHECK(field_type IN ('text','email','tel','date','textarea','select','checkbox','file','signature','heading','info','divider')),
         field_name TEXT DEFAULT NULL,
         field_label TEXT DEFAULT NULL,
         placeholder TEXT DEFAULT NULL,
@@ -613,16 +613,23 @@ function setupDatabase(?PDO $db = null): void {
         FOREIGN KEY (form_id) REFERENCES forms(id) ON DELETE CASCADE
     )");
 
-    // Migration for older databases where form_fields CHECK constraint has no "select"
+    // Migration for older databases where form_fields CHECK constraint is outdated
     $formFieldsSqlStmt = $db->prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'form_fields' LIMIT 1");
     $formFieldsSqlStmt->execute();
     $formFieldsCreateSql = (string) ($formFieldsSqlStmt->fetchColumn() ?: '');
-    if ($formFieldsCreateSql !== '' && stripos($formFieldsCreateSql, "'select'") === false) {
+    if (
+        $formFieldsCreateSql !== ''
+        && (
+            stripos($formFieldsCreateSql, "'select'") === false
+            || stripos($formFieldsCreateSql, "'date'") === false
+            || stripos($formFieldsCreateSql, "'info'") === false
+        )
+    ) {
         $db->exec("DROP TABLE IF EXISTS form_fields_new");
         $db->exec("CREATE TABLE IF NOT EXISTS form_fields_new (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             form_id INTEGER NOT NULL,
-            field_type TEXT NOT NULL CHECK(field_type IN ('text','email','tel','textarea','select','checkbox','file','signature','heading','divider')),
+            field_type TEXT NOT NULL CHECK(field_type IN ('text','email','tel','date','textarea','select','checkbox','file','signature','heading','info','divider')),
             field_name TEXT DEFAULT NULL,
             field_label TEXT DEFAULT NULL,
             placeholder TEXT DEFAULT NULL,
