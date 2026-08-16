@@ -483,7 +483,7 @@ $canEditContent = $isAdmin || $isEditor;
                         <textarea id="docDescription" rows="2" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm resize-none" placeholder="Optionale Beschreibung..."></textarea>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Datei * <span class="font-normal text-gray-400">(max. 10 MB)</span></label>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Datei * <span class="font-normal text-gray-400">(max. 100 MB)</span></label>
                         <div id="dropZone" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-primary/50 transition-colors cursor-pointer">
                             <span class="material-symbols-outlined text-4xl text-gray-300 mb-2">cloud_upload</span>
                             <p class="text-sm text-gray-500">Datei hierher ziehen oder <span class="text-primary font-bold">durchsuchen</span></p>

@@ -7,9 +7,12 @@
 ob_start();
 require_once __DIR__ . '/config.php';
 
-header('Content-Type: application/json; charset=utf-8');
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? '';
+
+if ($action !== 'public_stream') {
+    header('Content-Type: application/json; charset=utf-8');
+}
 
 // Sub-directory for documents inside UPLOAD_DIR
 define('DOCS_DIR', UPLOAD_DIR . 'documents/');
@@ -32,6 +35,70 @@ $ALLOWED_DOC_TYPES = [
     'application/x-zip-compressed',
 ];
 
+function isPdfDocument(array $doc): bool {
+    $name = strtolower((string) ($doc['file_name'] ?? ''));
+    return str_ends_with($name, '.pdf');
+}
+
+function resolveDocumentAbsolutePath(array $doc): string {
+    return __DIR__ . '/../' . ltrim((string) ($doc['file_path'] ?? ''), '/');
+}
+
+function streamPdfFile(string $filePath, string $downloadName): void {
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+
+    $size = filesize($filePath);
+    $start = 0;
+    $end = max(0, $size - 1);
+    $status = 200;
+
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: inline; filename="' . str_replace('"', '', $downloadName) . '"');
+    header('Accept-Ranges: bytes');
+
+    $range = $_SERVER['HTTP_RANGE'] ?? '';
+    if ($range !== '' && preg_match('/bytes=(\d*)-(\d*)/i', $range, $m)) {
+        $rangeStart = $m[1] === '' ? 0 : (int) $m[1];
+        $rangeEnd = $m[2] === '' ? $end : (int) $m[2];
+        if ($rangeStart <= $rangeEnd && $rangeStart < $size) {
+            $start = $rangeStart;
+            $end = min($rangeEnd, $size - 1);
+            $status = 206;
+            header('Content-Range: bytes ' . $start . '-' . $end . '/' . $size);
+        }
+    }
+
+    $length = ($end - $start) + 1;
+    http_response_code($status);
+    header('Content-Length: ' . $length);
+
+    $chunk = 8192;
+    $fp = fopen($filePath, 'rb');
+    if ($fp === false) {
+        http_response_code(500);
+        exit;
+    }
+
+    fseek($fp, $start);
+    $remaining = $length;
+    while ($remaining > 0 && !feof($fp)) {
+        $read = min($chunk, $remaining);
+        $buffer = fread($fp, $read);
+        if ($buffer === false) {
+            break;
+        }
+        echo $buffer;
+        $remaining -= strlen($buffer);
+        if (connection_status() !== CONNECTION_NORMAL) {
+            break;
+        }
+    }
+    fclose($fp);
+    exit;
+}
+
 // ============================
 // LIST DOCUMENTS
 // ============================
@@ -47,9 +114,64 @@ if ($method === 'GET' && $action === 'list') {
         $tagStmt = $db->prepare("SELECT t.id, t.name, t.color FROM document_tags t INNER JOIN document_tag_map m ON t.id = m.tag_id WHERE m.document_id = :did ORDER BY t.name");
         $tagStmt->execute([':did' => $doc['id']]);
         $doc['tags'] = $tagStmt->fetchAll();
+        $doc['viewer_url'] = isPdfDocument($doc) ? '/dokument/' . (int) $doc['id'] : null;
     }
 
     jsonResponse(['documents' => $documents]);
+}
+
+// ============================
+// PUBLIC PDF LIST FOR VIEWER PAGES
+// ============================
+if ($method === 'GET' && $action === 'public_list') {
+    $db = getDB();
+    $stmt = $db->query("SELECT id, title, description, file_name, file_size, created_at FROM documents ORDER BY created_at DESC");
+    $rows = $stmt->fetchAll();
+    $documents = [];
+    foreach ($rows as $doc) {
+        if (!isPdfDocument($doc)) {
+            continue;
+        }
+        $documents[] = [
+            'id' => (int) $doc['id'],
+            'title' => (string) ($doc['title'] ?? ''),
+            'description' => (string) ($doc['description'] ?? ''),
+            'file_name' => (string) ($doc['file_name'] ?? ''),
+            'file_size' => (int) ($doc['file_size'] ?? 0),
+            'created_at' => (string) ($doc['created_at'] ?? ''),
+            'viewer_url' => '/dokument/' . (int) $doc['id'],
+        ];
+    }
+    jsonResponse(['documents' => $documents]);
+}
+
+// ============================
+// PUBLIC PDF STREAM (inline)
+// ============================
+if ($method === 'GET' && $action === 'public_stream') {
+    $id = (int) ($_GET['id'] ?? 0);
+    if (!$id) {
+        http_response_code(400);
+        exit('ID erforderlich');
+    }
+
+    $db = getDB();
+    $stmt = $db->prepare("SELECT * FROM documents WHERE id = :id");
+    $stmt->execute([':id' => $id]);
+    $doc = $stmt->fetch();
+
+    if (!$doc || !isPdfDocument($doc)) {
+        http_response_code(404);
+        exit('Dokument nicht gefunden');
+    }
+
+    $filePath = resolveDocumentAbsolutePath($doc);
+    if (!is_file($filePath)) {
+        http_response_code(404);
+        exit('Datei nicht gefunden');
+    }
+
+    streamPdfFile($filePath, (string) ($doc['file_name'] ?? ('dokument-' . $id . '.pdf')));
 }
 
 // ============================
@@ -181,10 +303,10 @@ if ($method === 'POST' && $action === 'upload') {
 
     $file = $_FILES['file'];
 
-    // Validate size (10 MB for documents)
-    $maxDocSize = 10 * 1024 * 1024;
+    // Validate size (100 MB for documents)
+    $maxDocSize = 100 * 1024 * 1024;
     if ($file['size'] > $maxDocSize) {
-        jsonResponse(['error' => 'Datei zu groß (max. 10 MB)'], 400);
+        jsonResponse(['error' => 'Datei zu groß (max. 100 MB)'], 400);
     }
 
     // Validate MIME type

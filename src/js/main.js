@@ -385,7 +385,7 @@ function renderDynamicForm(container, form, fields, index) {
             <form class="${standaloneFormPage ? 'mt-0' : 'mt-8'} wkc-dynamic-form" data-form-slug="${escapeDynamicValue(form.slug || '')}" enctype="multipart/form-data">
                 <input type="text" name="website" value="" autocomplete="off" tabindex="-1" aria-hidden="true" class="hidden">
                 <div class="dynamic-form-message hidden rounded-xl p-4 text-sm font-medium"></div>
-                <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5 wkc-dynamic-form-fields">
+                <div class="mt-5 grid grid-cols-1 md:grid-cols-6 gap-5 wkc-dynamic-form-fields">
                     ${fieldHtml}
                 </div>
                 <div class="mt-6">
@@ -414,15 +414,18 @@ function renderDynamicFormField(field, index, fieldIndex) {
     const requiredAttr = required ? 'required' : '';
     const requiredMark = required ? ' <span class="text-red-500">*</span>' : '';
     const baseInputClass = 'w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-primary focus:ring-2 focus:ring-primary/20';
-    const layoutWidth = String(field.options?.layoutWidth || 'full').toLowerCase() === 'half' ? 'half' : 'full';
-    const fieldSpanClass = layoutWidth === 'half' ? 'md:col-span-1' : 'md:col-span-2';
+    const layoutWidthRaw = String(field.options?.layoutWidth || 'full').toLowerCase();
+    const layoutWidth = ['full', 'half', 'third'].includes(layoutWidthRaw) ? layoutWidthRaw : 'full';
+    const fieldSpanClass = layoutWidth === 'half'
+        ? 'md:col-span-3'
+        : (layoutWidth === 'third' ? 'md:col-span-2' : 'md:col-span-6');
 
     if (type === 'divider') {
-        return '<div class="md:col-span-2"><hr class="my-2 border-gray-200"></div>';
+        return '<div class="md:col-span-6"><hr class="my-2 border-gray-200"></div>';
     }
 
     if (type === 'heading') {
-        return `<div class="md:col-span-2"><h4 class="pt-1 text-lg font-bold text-gray-900">${label || 'Überschrift'}</h4></div>`;
+        return `<div class="md:col-span-6"><h4 class="pt-1 text-lg font-bold text-gray-900">${label || 'Überschrift'}</h4></div>`;
     }
 
     if (type === 'textarea') {
@@ -489,7 +492,7 @@ function renderDynamicFormField(field, index, fieldIndex) {
     if (type === 'signature') {
         const signatureId = escapeDynamicValue(`${name}-${index}-${fieldIndex}`);
         const signatureRows = Math.max(10, Math.min(30, Number(field.options?.fieldRows || 10)));
-        const signatureDesktopHeight = signatureRows * 24;
+        const signatureDesktopHeight = Math.max(120, Math.min(200, signatureRows * 16));
         const signatureMobileHeight = Math.max(280, signatureRows * 28);
         return `
             <div class="wkc-signature-field ${fieldSpanClass}" data-signature-field="${signatureId}">
@@ -535,7 +538,7 @@ function renderDynamicFormField(field, index, fieldIndex) {
         `;
     }
 
-    const inputType = ['email', 'tel'].includes(type) ? type : 'text';
+    const inputType = ['email', 'tel', 'date'].includes(type) ? type : 'text';
     const inputRows = Math.max(1, Math.min(20, Number(field.options?.fieldRows || 1)));
     const inputHeightRem = (2.85 * inputRows).toFixed(2);
     return `
@@ -560,7 +563,7 @@ function setupDynamicSignaturePads(formElement) {
         const previewEmpty = field.querySelector('.wkc-signature-preview-empty');
         const hidden = field.querySelector('input[type="hidden"]');
         const clearBtns = Array.from(field.querySelectorAll('[data-signature-clear]'));
-        const desktopBaseHeight = Math.max(180, Number(canvas?.getAttribute('data-base-height') || 180));
+        const desktopBaseHeight = Math.max(120, Number(canvas?.getAttribute('data-base-height') || 120));
         const mobileBaseHeight = Math.max(280, Number(mobileCanvas?.getAttribute('data-base-height') || 280));
         if (!hidden || (!canvas && !mobileCanvas)) return;
 
@@ -830,12 +833,12 @@ function loadVorstand() {
                 const delay = delays[i % delays.length];
 
                 return `
-                    <article class="group w-full rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-xl transition-all duration-300 p-5 md:p-6 scroll-animate ${delay}">
-                        <div class="mx-auto mb-5 w-36 h-36 sm:w-40 sm:h-40 md:w-44 md:h-44 rounded-full overflow-hidden border-4 border-gray-100 shadow-lg group-hover:border-primary transition-all duration-300 group-hover:shadow-primary/20">
+                    <article class="group w-full rounded-2xl border border-gray-100 bg-white shadow-sm hover:shadow-xl transition-all duration-300 p-4 md:p-5 scroll-animate ${delay}">
+                        <div class="mx-auto mb-4 w-28 h-28 sm:w-32 sm:h-32 lg:w-28 lg:h-28 xl:w-32 xl:h-32 rounded-full overflow-hidden border-4 border-gray-100 shadow-lg group-hover:border-primary transition-all duration-300 group-hover:shadow-primary/20">
                             ${img}
                         </div>
-                        <h3 class="text-lg md:text-xl font-bold text-gray-900 group-hover:text-primary transition-colors text-center">${esc(m.display_name)}</h3>
-                        <p class="mt-1 text-sm md:text-base text-gray-500 font-medium text-center">${esc(m.position || '')}</p>
+                        <h3 class="text-base md:text-lg font-bold text-gray-900 group-hover:text-primary transition-colors text-center">${esc(m.display_name)}</h3>
+                        <p class="mt-1 text-sm text-gray-500 font-medium text-center">${esc(m.position || '')}</p>
                     </article>`;
             }).join('');
 
